@@ -1,0 +1,41 @@
+		( URDU ACTIVEX CONTROL ) 
+		========================
+
+   Copyright (c) 1999, 2000 Naseem Amjad Ali Khan
+                 v 1.3    ( 22-01-99 )
+
+Instructions:
+------------
+	Set the font property to 'Alkatib1' before using the control.
+
+Usage:
+-----
+	* PhoneticText Method is used to write and read from the UrduTextBox. The parameter passed to the PhoneticText Method is the keystrokes which are used when writing in an NLA complaint Urdu wordprocessor. 
+
+	* Text Method can be used to copy the contents of the UrduTextBox (which is normally cryptic) and copied to an english wordprocessor with the font set to "AlKatib1".
+
+Special Note:
+------------
+	* The joined 'lam alif' is represented by '~' when using PhoneticText Method.
+
+Notice:
+------
+
+You may copy and distribute this ocx freely, provided that:
+ 1)   No fee is charged for such copying and distribution
+ 2)   It is distributed ONLY in its original, unmodified state.
+
+
+You Must Do It:
+--------------
+
+Please send comments, etc. to naseem@technologist.com
+
+visit http://naseem.virtualave.net OR http://www.naseem.freeservers.com for more FREE software.
+
+
+
+=============================================================================
+THIS SOFTWARE/OCX IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND. 
+THE ENTIRE RISK OF THE USE OF THE SOFTWARE/OCX IS ASSUMED BY YOU.
+=============================================================================

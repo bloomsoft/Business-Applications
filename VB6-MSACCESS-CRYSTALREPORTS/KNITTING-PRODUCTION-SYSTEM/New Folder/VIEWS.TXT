@@ -1,0 +1,33 @@
+CONT_VIEW
+(
+SELECT a.*, b.name AS ClothName, b.width, c.name AS PartyName,
+ c.add_r, c.phone, d.name AS EMPName, f.name AS YName,
+ G.Name AS LName, h.Name AS MName
+FROM Cont_1 a,cloth b,Acchart c,Emp1 d,Yarn F,Yarn G,Machine H 
+Where a.item=b.code(+)
+and a.party = c.code(+)
+and a.reference=d.Emp_no(+)
+and a.YarnCount=f.COde(+)
+and a.LycraCOunt=G.Code(+)
+and a.Machine=H.code(+)
+)
+
+
+INWARD_VIEW
+(
+SELECT a.*, b.name
+ FROM inward a, yarn b 
+WHERE a.yarn=b.code(+)
+)
+
+
+OUTWARD_VIEW
+(
+SELECT a.*, b.Name AS ClothName, b.Width AS ClothWidth, 
+c.Name AS YarnName, c.Count AS YarnCount 
+
+FROM outward a,Cloth b,Yarn c 
+WHERE a.item=b.code(+) 
+and a.yarn=c.code(+)
+
+)
