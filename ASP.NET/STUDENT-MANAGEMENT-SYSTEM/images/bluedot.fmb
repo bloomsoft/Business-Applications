@@ -1,0 +1,281 @@
+""
+""
+""
+"Square333.Square.Basic (animated)"
+1
+6
+0
+0
+0
+0
+20
+"6E639F"
+"6E639F"
+"0"
+"0"
+"CDC9DE"
+"0"
+"0"
+"FFFFFFFF"
+"0"
+"0"
+"0"
+"0"
+"0"
+"0"
+"0"
+"0"
+"0"
+"0"
+"_sans",#TRUE#,#FALSE#,0
+"           HOME","#","_self",#TRUE#,0,#TRUE#
+"        WELCOME","#","_self",#TRUE#,0,#TRUE#
+"         MESSAGE","#","_self",#TRUE#,0,#TRUE#
+"      PROGRAMS","#","_self",#TRUE#,0,#TRUE#
+"   ACHIEVEMENTS","#","_self",#TRUE#,0,#TRUE#
+"      CAMPUSES","#","_self",#TRUE#,0,#TRUE#
+"Row1 Col7","http://www.","_self",#TRUE#,0,#TRUE#
+"Row1 Col8","http://www.","_self",#TRUE#,0,#TRUE#
+"Row1 Col9","http://www.","_self",#TRUE#,0,#TRUE#
+"Row1 Col10","http://www.","_self",#TRUE#,0,#TRUE#
+" ","http://www.flashation.com/index.html","_self",#TRUE#,0,#TRUE#
+" ","http://www.flashation.com/buy.html","_self",#TRUE#,0,#TRUE#
+" ","http://www.flashation.com/samples.html","_self",#TRUE#,0,#TRUE#
+" ","http://www.flashation.com/samples.html","_self",#TRUE#,0,#TRUE#
+"Button R2 C5","http://www.","_self",#TRUE#,0,#TRUE#
+"Row2 Col6","http://www.","_self",#TRUE#,0,#TRUE#
+"Row2 Col7","http://www.","_self",#TRUE#,0,#TRUE#
+"Row2 Col8","http://www.","_self",#TRUE#,0,#TRUE#
+"Row2 Col9","http://www.","_self",#TRUE#,0,#TRUE#
+"Row2 Col10","http://www.","_self",#TRUE#,0,#TRUE#
+" ","http://www.flashation.com/index.html","_self",#TRUE#,0,#TRUE#
+"ENTER","http://www.flashation.com/buy.html","_self",#TRUE#,0,#TRUE#
+" ","http://www.flashation.com/samples.html","_self",#TRUE#,0,#TRUE#
+" ","http://www.flashation.com/samples.html","_self",#TRUE#,0,#TRUE#
+"Button R3 C5","http://www.","_self",#TRUE#,0,#TRUE#
+"Row3 Col6","http://www.","_self",#TRUE#,0,#TRUE#
+"Row3 Col7","http://www.","_self",#TRUE#,0,#TRUE#
+"Row3 Col8","http://www.","_self",#TRUE#,0,#TRUE#
+"Row3 Col9","http://www.","_self",#TRUE#,0,#TRUE#
+"Row3 Col10","http://www.","_self",#TRUE#,0,#TRUE#
+" ","http://www.flashation.com/index.html","_self",#TRUE#,0,#TRUE#
+" ","http://www.flashation.com/buy.html","_self",#TRUE#,0,#TRUE#
+" ","http://www.flashation.com/samples.html","_self",#TRUE#,0,#TRUE#
+" ","http://www.flashation.com/samples.html","_self",#TRUE#,0,#TRUE#
+"Button R4 C5","http://www.","_self",#TRUE#,0,#TRUE#
+"Row4 Col6","http://www.","_self",#TRUE#,0,#TRUE#
+"Row4 Col7","http://www.","_self",#TRUE#,0,#TRUE#
+"Row4 Col8","http://www.","_self",#TRUE#,0,#TRUE#
+"Row4 Col9","http://www.","_self",#TRUE#,0,#TRUE#
+"Row4 Col10","http://www.","_self",#TRUE#,0,#TRUE#
+" ","http://www.flashation.com/index.html","_self",#TRUE#,0,#TRUE#
+" ","http://www.flashation.com/buy.html","_self",#TRUE#,0,#TRUE#
+" ","http://www.flashation.com/samples.html","_self",#TRUE#,0,#TRUE#
+"© flashation.com","http://www.flashation.com/samples.html","_self",#TRUE#,0,#TRUE#
+"© flashation.com","http://www.","_self",#TRUE#,0,#TRUE#
+"Row5 Col6","http://www.","_self",#TRUE#,0,#TRUE#
+"Row5 Col7","http://www.","_self",#TRUE#,0,#TRUE#
+"Row5 Col8","http://www.","_self",#TRUE#,0,#TRUE#
+"Row5 Col9","http://www.","_self",#TRUE#,0,#TRUE#
+"Row5 Col10","http://www.","_self",#TRUE#,0,#TRUE#
+"Row6 Col1","http://www.","_self",#TRUE#,0,#TRUE#
+"Row6 Col2","http://www.","_self",#TRUE#,0,#TRUE#
+"Row6 Col3","http://www.","_self",#TRUE#,0,#TRUE#
+"Row6 Col4","http://www.","_self",#TRUE#,0,#TRUE#
+"Row6 Col5","http://www.","_self",#TRUE#,0,#TRUE#
+"Row6 Col6","http://www.","_self",#TRUE#,0,#TRUE#
+"Row6 Col7","http://www.","_self",#TRUE#,0,#TRUE#
+"Row6 Col8","http://www.","_self",#TRUE#,0,#TRUE#
+"Row6 Col9","http://www.","_self",#TRUE#,0,#TRUE#
+"Row6 Col10","http://www.","_self",#TRUE#,0,#TRUE#
+"Row7 Col1","http://www.","_self",#TRUE#,0,#TRUE#
+"Row7 Col2","http://www.","_self",#TRUE#,0,#TRUE#
+"Row7 Col3","http://www.","_self",#TRUE#,0,#TRUE#
+"Row7 Col4","http://www.","_self",#TRUE#,0,#TRUE#
+"Row7 Col5","http://www.","_self",#TRUE#,0,#TRUE#
+"Row7 Col6","http://www.","_self",#TRUE#,0,#TRUE#
+"Row7 Col7","http://www.","_self",#TRUE#,0,#TRUE#
+"Row7 Col8","http://www.","_self",#TRUE#,0,#TRUE#
+"Row7 Col9","http://www.","_self",#TRUE#,0,#TRUE#
+"Row7 Col10","http://www.","_self",#TRUE#,0,#TRUE#
+"Row8 Col1","http://www.","_self",#TRUE#,0,#TRUE#
+"Row8 Col2","http://www.","_self",#TRUE#,0,#TRUE#
+"Row8 Col3","http://www.","_self",#TRUE#,0,#TRUE#
+"Row8 Col4","http://www.","_self",#TRUE#,0,#TRUE#
+"Row8 Col5","http://www.","_self",#TRUE#,0,#TRUE#
+"Row8 Col6","http://www.","_self",#TRUE#,0,#TRUE#
+"Row8 Col7","http://www.","_self",#TRUE#,0,#TRUE#
+"Row8 Col8","http://www.","_self",#TRUE#,0,#TRUE#
+"Row8 Col9","http://www.","_self",#TRUE#,0,#TRUE#
+"Row8 Col10","http://www.","_self",#TRUE#,0,#TRUE#
+"Row9 Col1","http://www.","_self",#TRUE#,0,#TRUE#
+"Row9 Col2","http://www.","_self",#TRUE#,0,#TRUE#
+"Row9 Col3","http://www.","_self",#TRUE#,0,#TRUE#
+"Row9 Col4","http://www.","_self",#TRUE#,0,#TRUE#
+"Row9 Col5","http://www.","_self",#TRUE#,0,#TRUE#
+"Row9 Col6","http://www.","_self",#TRUE#,0,#TRUE#
+"Row9 Col7","http://www.","_self",#TRUE#,0,#TRUE#
+"Row9 Col8","http://www.","_self",#TRUE#,0,#TRUE#
+"Row9 Col9","http://www.","_self",#TRUE#,0,#TRUE#
+"Row9 Col10","http://www.","_self",#TRUE#,0,#TRUE#
+"Row10 Col1","http://www.","_self",#TRUE#,0,#TRUE#
+"Row10 Col2","http://www.","_self",#TRUE#,0,#TRUE#
+"Row10 Col3","http://www.","_self",#TRUE#,0,#TRUE#
+"Row10 Col4","http://www.","_self",#TRUE#,0,#TRUE#
+"Row10 Col5","http://www.","_self",#TRUE#,0,#TRUE#
+"Row10 Col6","http://www.","_self",#TRUE#,0,#TRUE#
+"Row10 Col7","http://www.","_self",#TRUE#,0,#TRUE#
+"Row10 Col8","http://www.","_self",#TRUE#,0,#TRUE#
+"Row10 Col9","http://www.","_self",#TRUE#,0,#TRUE#
+"Row10 Col10","http://www.","_self",#TRUE#,0,#TRUE#
+"Row11 Col1","http://www.","_self",#TRUE#,0,#TRUE#
+"Row11 Col2","http://www.","_self",#TRUE#,0,#TRUE#
+"Row11 Col3","http://www.","_self",#TRUE#,0,#TRUE#
+"Row11 Col4","http://www.","_self",#TRUE#,0,#TRUE#
+"Row11 Col5","http://www.","_self",#TRUE#,0,#TRUE#
+"Row11 Col6","http://www.","_self",#TRUE#,0,#TRUE#
+"Row11 Col7","http://www.","_self",#TRUE#,0,#TRUE#
+"Row11 Col8","http://www.","_self",#TRUE#,0,#TRUE#
+"Row11 Col9","http://www.","_self",#TRUE#,0,#TRUE#
+"Row11 Col10","http://www.","_self",#TRUE#,0,#TRUE#
+"Row12 Col1","http://www.","_self",#TRUE#,0,#TRUE#
+"Row12 Col2","http://www.","_self",#TRUE#,0,#TRUE#
+"Row12 Col3","http://www.","_self",#TRUE#,0,#TRUE#
+"Row12 Col4","http://www.","_self",#TRUE#,0,#TRUE#
+"Row12 Col5","http://www.","_self",#TRUE#,0,#TRUE#
+"Row12 Col6","http://www.","_self",#TRUE#,0,#TRUE#
+"Row12 Col7","http://www.","_self",#TRUE#,0,#TRUE#
+"Row12 Col8","http://www.","_self",#TRUE#,0,#TRUE#
+"Row12 Col9","http://www.","_self",#TRUE#,0,#TRUE#
+"Row12 Col10","http://www.","_self",#TRUE#,0,#TRUE#
+"Row13 Col1","http://www.","_self",#TRUE#,0,#TRUE#
+"Row13 Col2","http://www.","_self",#TRUE#,0,#TRUE#
+"Row13 Col3","http://www.","_self",#TRUE#,0,#TRUE#
+"Row13 Col4","http://www.","_self",#TRUE#,0,#TRUE#
+"Row13 Col5","http://www.","_self",#TRUE#,0,#TRUE#
+"Row13 Col6","http://www.","_self",#TRUE#,0,#TRUE#
+"Row13 Col7","http://www.","_self",#TRUE#,0,#TRUE#
+"Row13 Col8","http://www.","_self",#TRUE#,0,#TRUE#
+"Row13 Col9","http://www.","_self",#TRUE#,0,#TRUE#
+"Row13 Col10","http://www.","_self",#TRUE#,0,#TRUE#
+"Row14 Col1","http://www.","_self",#TRUE#,0,#TRUE#
+"Row14 Col2","http://www.","_self",#TRUE#,0,#TRUE#
+"Row14 Col3","http://www.","_self",#TRUE#,0,#TRUE#
+"Row14 Col4","http://www.","_self",#TRUE#,0,#TRUE#
+"Row14 Col5","http://www.","_self",#TRUE#,0,#TRUE#
+"Row14 Col6","http://www.","_self",#TRUE#,0,#TRUE#
+"Row14 Col7","http://www.","_self",#TRUE#,0,#TRUE#
+"Row14 Col8","http://www.","_self",#TRUE#,0,#TRUE#
+"Row14 Col9","http://www.","_self",#TRUE#,0,#TRUE#
+"Row14 Col10","http://www.","_self",#TRUE#,0,#TRUE#
+"Row15 Col1","http://www.","_self",#TRUE#,0,#TRUE#
+"Row15 Col2","http://www.","_self",#TRUE#,0,#TRUE#
+"Row15 Col3","http://www.","_self",#TRUE#,0,#TRUE#
+"Row15 Col4","http://www.","_self",#TRUE#,0,#TRUE#
+"Row15 Col5","http://www.","_self",#TRUE#,0,#TRUE#
+"Row15 Col6","http://www.","_self",#TRUE#,0,#TRUE#
+"Row15 Col7","http://www.","_self",#TRUE#,0,#TRUE#
+"Row15 Col8","http://www.","_self",#TRUE#,0,#TRUE#
+"Row15 Col9","http://www.","_self",#TRUE#,0,#TRUE#
+"Row15 Col10","http://www.","_self",#TRUE#,0,#TRUE#
+"Row16 Col1","http://www.","_self",#TRUE#,0,#TRUE#
+"Row16 Col2","http://www.","_self",#TRUE#,0,#TRUE#
+"Row16 Col3","http://www.","_self",#TRUE#,0,#TRUE#
+"Row16 Col4","http://www.","_self",#TRUE#,0,#TRUE#
+"Row16 Col5","http://www.","_self",#TRUE#,0,#TRUE#
+"Row16 Col6","http://www.","_self",#TRUE#,0,#TRUE#
+"Row16 Col7","http://www.","_self",#TRUE#,0,#TRUE#
+"Row16 Col8","http://www.","_self",#TRUE#,0,#TRUE#
+"Row16 Col9","http://www.","_self",#TRUE#,0,#TRUE#
+"Row16 Col10","http://www.","_self",#TRUE#,0,#TRUE#
+"Row17 Col1","http://www.","_self",#TRUE#,0,#TRUE#
+"Row17 Col2","http://www.","_self",#TRUE#,0,#TRUE#
+"Row17 Col3","http://www.","_self",#TRUE#,0,#TRUE#
+"Row17 Col4","http://www.","_self",#TRUE#,0,#TRUE#
+"Row17 Col5","http://www.","_self",#TRUE#,0,#TRUE#
+"Row17 Col6","http://www.","_self",#TRUE#,0,#TRUE#
+"Row17 Col7","http://www.","_self",#TRUE#,0,#TRUE#
+"Row17 Col8","http://www.","_self",#TRUE#,0,#TRUE#
+"Row17 Col9","http://www.","_self",#TRUE#,0,#TRUE#
+"Row17 Col10","http://www.","_self",#TRUE#,0,#TRUE#
+"Row18 Col1","http://www.","_self",#TRUE#,0,#TRUE#
+"Row18 Col2","http://www.","_self",#TRUE#,0,#TRUE#
+"Row18 Col3","http://www.","_self",#TRUE#,0,#TRUE#
+"Row18 Col4","http://www.","_self",#TRUE#,0,#TRUE#
+"Row18 Col5","http://www.","_self",#TRUE#,0,#TRUE#
+"Row18 Col6","http://www.","_self",#TRUE#,0,#TRUE#
+"Row18 Col7","http://www.","_self",#TRUE#,0,#TRUE#
+"Row18 Col8","http://www.","_self",#TRUE#,0,#TRUE#
+"Row18 Col9","http://www.","_self",#TRUE#,0,#TRUE#
+"Row18 Col10","http://www.","_self",#TRUE#,0,#TRUE#
+"Row19 Col1","http://www.","_self",#TRUE#,0,#TRUE#
+"Row19 Col2","http://www.","_self",#TRUE#,0,#TRUE#
+"Row19 Col3","http://www.","_self",#TRUE#,0,#TRUE#
+"Row19 Col4","http://www.","_self",#TRUE#,0,#TRUE#
+"Row19 Col5","http://www.","_self",#TRUE#,0,#TRUE#
+"Row19 Col6","http://www.","_self",#TRUE#,0,#TRUE#
+"Row19 Col7","http://www.","_self",#TRUE#,0,#TRUE#
+"Row19 Col8","http://www.","_self",#TRUE#,0,#TRUE#
+"Row19 Col9","http://www.","_self",#TRUE#,0,#TRUE#
+"Row19 Col10","http://www.","_self",#TRUE#,0,#TRUE#
+"Row20 Col1","http://www.","_self",#TRUE#,0,#TRUE#
+"Row20 Col2","http://www.","_self",#TRUE#,0,#TRUE#
+"Row20 Col3","http://www.","_self",#TRUE#,0,#TRUE#
+"Row20 Col4","http://www.","_self",#TRUE#,0,#TRUE#
+"Row20 Col5","http://www.","_self",#TRUE#,0,#TRUE#
+"Row20 Col6","http://www.","_self",#TRUE#,0,#TRUE#
+"Row20 Col7","http://www.","_self",#TRUE#,0,#TRUE#
+"Row20 Col8","http://www.","_self",#TRUE#,0,#TRUE#
+"Row20 Col9","http://www.","_self",#TRUE#,0,#TRUE#
+"Row20 Col10","http://www.","_self",#TRUE#,0,#TRUE#
+"Row21 Col1","http://www.","_self",#TRUE#,0,#TRUE#
+"Row21 Col2","http://www.","_self",#TRUE#,0,#TRUE#
+"Row21 Col3","http://www.","_self",#TRUE#,0,#TRUE#
+"Row21 Col4","http://www.","_self",#TRUE#,0,#TRUE#
+"Row21 Col5","http://www.","_self",#TRUE#,0,#TRUE#
+"Row21 Col6","http://www.","_self",#TRUE#,0,#TRUE#
+"Row21 Col7","http://www.","_self",#TRUE#,0,#TRUE#
+"Row21 Col8","http://www.","_self",#TRUE#,0,#TRUE#
+"Row21 Col9","http://www.","_self",#TRUE#,0,#TRUE#
+"Row21 Col10","http://www.","_self",#TRUE#,0,#TRUE#
+"Row22 Col1","http://www.","_self",#TRUE#,0,#TRUE#
+"Row22 Col2","http://www.","_self",#TRUE#,0,#TRUE#
+"Row22 Col3","http://www.","_self",#TRUE#,0,#TRUE#
+"Row22 Col4","http://www.","_self",#TRUE#,0,#TRUE#
+"Row22 Col5","http://www.","_self",#TRUE#,0,#TRUE#
+"Row22 Col6","http://www.","_self",#TRUE#,0,#TRUE#
+"Row22 Col7","http://www.","_self",#TRUE#,0,#TRUE#
+"Row22 Col8","http://www.","_self",#TRUE#,0,#TRUE#
+"Row22 Col9","http://www.","_self",#TRUE#,0,#TRUE#
+"Row22 Col10","http://www.","_self",#TRUE#,0,#TRUE#
+"Row23 Col1","http://www.","_self",#TRUE#,0,#TRUE#
+"Row23 Col2","http://www.","_self",#TRUE#,0,#TRUE#
+"Row23 Col3","http://www.","_self",#TRUE#,0,#TRUE#
+"Row23 Col4","http://www.","_self",#TRUE#,0,#TRUE#
+"Row23 Col5","http://www.","_self",#TRUE#,0,#TRUE#
+"Row23 Col6","http://www.","_self",#TRUE#,0,#TRUE#
+"Row23 Col7","http://www.","_self",#TRUE#,0,#TRUE#
+"Row23 Col8","http://www.","_self",#TRUE#,0,#TRUE#
+"Row23 Col9","http://www.","_self",#TRUE#,0,#TRUE#
+"Row23 Col10","http://www.","_self",#TRUE#,0,#TRUE#
+"Row24 Col1","http://www.","_self",#TRUE#,0,#TRUE#
+"Row24 Col2","http://www.","_self",#TRUE#,0,#TRUE#
+"Row24 Col3","http://www.","_self",#TRUE#,0,#TRUE#
+"Row24 Col4","http://www.","_self",#TRUE#,0,#TRUE#
+"Row24 Col5","http://www.","_self",#TRUE#,0,#TRUE#
+"Row24 Col6","http://www.","_self",#TRUE#,0,#TRUE#
+"Row24 Col7","http://www.","_self",#TRUE#,0,#TRUE#
+"Row24 Col8","http://www.","_self",#TRUE#,0,#TRUE#
+"Row24 Col9","http://www.","_self",#TRUE#,0,#TRUE#
+"Row24 Col10","http://www.","_self",#TRUE#,0,#TRUE#
+"Row25 Col1","http://www.","_self",#TRUE#,0,#TRUE#
+"Row25 Col2","http://www.","_self",#TRUE#,0,#TRUE#
+"Row25 Col3","http://www.","_self",#TRUE#,0,#TRUE#
+"Row25 Col4","http://www.","_self",#TRUE#,0,#TRUE#
+"Row25 Col5","http://www.","_self",#TRUE#,0,#TRUE#
+"Row25 Col6","http://www.","_self",#TRUE#,0,#TRUE#
+"Row25 Col7","http://www.","_self",#TRUE#,0,#TRUE#
+"Row25 Col8","http://www.","_self",#TRUE#,0,#TRUE#
+"Row25 Col9","http://www.","_self",#TRUE#,0,#TRUE#
+"Row25 Col10","http://www.","_self",#TRUE#,0,#TRUE#
+4,16000,25,16000

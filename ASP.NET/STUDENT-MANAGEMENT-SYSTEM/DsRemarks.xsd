@@ -1,0 +1,24 @@
+<?xml version="1.0" standalone="yes"?>
+<xs:schema id="DsRemarks" targetNamespace="http://www.tempuri.org/DsRemarks.xsd" xmlns:mstns="http://www.tempuri.org/DsRemarks.xsd" xmlns="http://www.tempuri.org/DsRemarks.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:element name="DsRemarks" msdata:IsDataSet="true">
+    <xs:complexType>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element name="RemrksVW">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ADMNO" type="xs:int" minOccurs="0" />
+              <xs:element name="REMARKS" type="xs:string" minOccurs="0" />
+              <xs:element name="TEACHERNAME" type="xs:string" minOccurs="0" />
+              <xs:element name="RDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="STUDENTS.NAME" type="xs:string" minOccurs="0" />
+              <xs:element name="FRNAME" type="xs:string" minOccurs="0" />
+              <xs:element name="RollNo" type="xs:short" minOccurs="0" />
+              <xs:element name="CLASSMAIN.NAME" type="xs:string" minOccurs="0" />
+              <xs:element name="SECTIONNAME" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

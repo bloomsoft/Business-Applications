@@ -1,0 +1,21 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Whiterose", "http://localhost/Whiterose/Whiterose.vbproj", "{F410D644-E759-4EA9-A054-9745D9EE9853}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{F410D644-E759-4EA9-A054-9745D9EE9853}.Debug.ActiveCfg = Debug|.NET
+		{F410D644-E759-4EA9-A054-9745D9EE9853}.Debug.Build.0 = Debug|.NET
+		{F410D644-E759-4EA9-A054-9745D9EE9853}.Release.ActiveCfg = Release|.NET
+		{F410D644-E759-4EA9-A054-9745D9EE9853}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
