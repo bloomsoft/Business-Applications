@@ -125,7 +125,7 @@ class OrderManager {
         if (!$order) return;
 
         $subtotal = (float) Database::fetchValue(
-            "SELECT ISNULL(SUM(line_total), 0) FROM order_items WHERE order_id = ? AND status != 'void'",
+            "SELECT COALESCE(SUM(line_total), 0) FROM order_items WHERE order_id = ? AND status != 'void'",
             [$orderId]
         );
         $discount = (float) ($order['discount_amount'] ?? 0);
@@ -136,7 +136,7 @@ class OrderManager {
         $total    = $taxable + $tax + $delivery + $tip;
 
         Database::query(
-            "UPDATE orders SET subtotal=?, tax_amount=?, total_amount=?, updated_at=GETDATE()
+            "UPDATE orders SET subtotal=?, tax_amount=?, total_amount=?, updated_at=datetime('now')
              WHERE order_id=?",
             [$subtotal, $tax, $total, $orderId]
         );
@@ -146,8 +146,8 @@ class OrderManager {
     public static function applyDiscount(int $orderId, int $discountId): bool {
         $discount = Database::fetchOne(
             "SELECT * FROM discounts WHERE discount_id = ? AND is_active = 1
-             AND (start_date IS NULL OR start_date <= GETDATE())
-             AND (end_date   IS NULL OR end_date   >= GETDATE())",
+             AND (start_date IS NULL OR start_date <= datetime('now'))
+             AND (end_date   IS NULL OR end_date   >= datetime('now'))",
             [$discountId]
         );
         if (!$discount) return false;
@@ -158,7 +158,7 @@ class OrderManager {
             : (float) $discount['value'];
 
         Database::query(
-            "UPDATE orders SET discount_amount = ?, updated_at = GETDATE() WHERE order_id = ?",
+            "UPDATE orders SET discount_amount = ?, updated_at = datetime('now') WHERE order_id = ?",
             [$amount, $orderId]
         );
         Database::query(
@@ -171,9 +171,9 @@ class OrderManager {
 
     /** Update order status */
     public static function updateStatus(int $orderId, string $status): void {
-        $completedAt = in_array($status, ['completed', 'served']) ? 'GETDATE()' : 'NULL';
+        $completedAt = in_array($status, ['completed', 'served']) ? 'datetime('now')' : 'NULL';
         Database::query(
-            "UPDATE orders SET status = ?, completed_at = $completedAt, updated_at = GETDATE()
+            "UPDATE orders SET status = ?, completed_at = $completedAt, updated_at = datetime('now')
              WHERE order_id = ?",
             [$status, $orderId]
         );
@@ -191,9 +191,9 @@ class OrderManager {
     /** Get full order with items */
     public static function getOrder(int $orderId): ?array {
         $order = Database::fetchOne(
-            "SELECT o.*, u.first_name + ' ' + u.last_name AS cashier_name,
+            "SELECT o.*, u.first_name || ' ' || u.last_name AS cashier_name,
                     t.table_number,
-                    c.first_name + ' ' + ISNULL(c.last_name,'') AS customer_name
+                    c.first_name || ' ' || COALESCE(c.last_name,'') AS customer_name
              FROM orders o
              LEFT JOIN users u ON u.user_id = o.user_id
              LEFT JOIN restaurant_tables t ON t.table_id = o.table_id
@@ -237,7 +237,7 @@ class OrderManager {
             $params[] = $filters['order_type'];
         }
         if (!empty($filters['date'])) {
-            $where[]  = 'CAST(o.created_at AS DATE) = ?';
+            $where[]  = 'date(o.created_at) = ?';
             $params[] = $filters['date'];
         }
         if (!empty($filters['search'])) {
@@ -250,8 +250,8 @@ class OrderManager {
         $sql = "SELECT o.order_id, o.order_number, o.order_type, o.status,
                        o.total_amount, o.created_at, o.source,
                        t.table_number,
-                       c.first_name + ' ' + ISNULL(c.last_name,'') AS customer_name,
-                       u.first_name + ' ' + u.last_name AS cashier_name
+                       c.first_name || ' ' || COALESCE(c.last_name,'') AS customer_name,
+                       u.first_name || ' ' || u.last_name AS cashier_name
                 FROM orders o
                 LEFT JOIN restaurant_tables t ON t.table_id = o.table_id
                 LEFT JOIN customers c ON c.customer_id = o.customer_id
@@ -267,7 +267,7 @@ class OrderManager {
             $params
         );
         $rows = Database::fetchAll(
-            "$sql ORDER BY o.created_at DESC OFFSET $offset ROWS FETCH NEXT $perPage ROWS ONLY",
+            "$sql ORDER BY o.created_at DESC LIMIT $perPage OFFSET $offset",
             $params
         );
 
@@ -285,7 +285,7 @@ class OrderManager {
         return Database::fetchAll(
             "SELECT o.order_id, o.order_number, o.order_type, o.created_at,
                     o.notes, t.table_number,
-                    DATEDIFF(MINUTE, o.created_at, GETDATE()) AS elapsed_minutes
+                    CAST((julianday(datetime('now')) - julianday(o.created_at)) * 1440 AS INTEGER) AS elapsed_minutes
              FROM orders o
              LEFT JOIN restaurant_tables t ON t.table_id = o.table_id
              WHERE o.location_id = ? AND o.status IN ('confirmed','preparing')

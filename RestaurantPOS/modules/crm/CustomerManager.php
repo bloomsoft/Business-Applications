@@ -31,7 +31,7 @@ class CustomerManager {
             "UPDATE customers
              SET first_name = ?, last_name = ?, email = ?, phone = ?,
                  date_of_birth = ?, gender = ?, address = ?, city = ?,
-                 notes = ?, updated_at = GETDATE()
+                 notes = ?, updated_at = datetime('now')
              WHERE customer_id = ?",
             [
                 $data['first_name']    ?? $old['first_name'],
@@ -71,17 +71,17 @@ class CustomerManager {
 
         $customer['recent_orders'] = Database::fetchAll(
             "SELECT order_id, order_number, order_type, total_amount, status, created_at
-             FROM orders WHERE customer_id = ? ORDER BY created_at DESC OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY",
+             FROM orders WHERE customer_id = ? ORDER BY created_at DESC LIMIT 10 OFFSET 0",
             [$customerId]
         );
         $customer['loyalty_history'] = Database::fetchAll(
             "SELECT * FROM loyalty_transactions WHERE customer_id = ?
-             ORDER BY created_at DESC OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY",
+             ORDER BY created_at DESC LIMIT 10 OFFSET 0",
             [$customerId]
         );
         $customer['feedbacks'] = Database::fetchAll(
             "SELECT * FROM customer_feedback WHERE customer_id = ?
-             ORDER BY created_at DESC OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY",
+             ORDER BY created_at DESC LIMIT 5 OFFSET 0",
             [$customerId]
         );
         return $customer;
@@ -154,7 +154,7 @@ class CustomerManager {
 
         // Apply as discount to order
         Database::query(
-            "UPDATE orders SET discount_amount = discount_amount + ?, updated_at = GETDATE()
+            "UPDATE orders SET discount_amount = discount_amount + ?, updated_at = datetime('now')
              WHERE order_id = ?",
             [$discount, $orderId]
         );
@@ -169,8 +169,8 @@ class CustomerManager {
                 CASE
                     WHEN total_visits = 0                             THEN 'new'
                     WHEN total_spent >= 1000 AND total_visits >= 20   THEN 'vip'
-                    WHEN last_visit < DATEADD(DAY,-90,GETDATE())      THEN 'lost'
-                    WHEN last_visit < DATEADD(DAY,-45,GETDATE())      THEN 'at-risk'
+                    WHEN last_visit < DATEADD(DAY,-90,datetime('now'))      THEN 'lost'
+                    WHEN last_visit < DATEADD(DAY,-45,datetime('now'))      THEN 'at-risk'
                     ELSE 'regular'
                 END
              WHERE tenant_id = ?",
@@ -212,7 +212,7 @@ class CustomerManager {
                 SUM(CASE WHEN rating <= 2 THEN 1 ELSE 0 END) AS negative
              FROM customer_feedback
              WHERE tenant_id = ?
-               AND created_at >= DATEADD(DAY,-?,GETDATE())",
+               AND created_at >= DATEADD(DAY,-?,datetime('now'))",
             [$tenantId, (int)$period]
         );
     }
