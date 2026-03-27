@@ -171,7 +171,7 @@ class OrderManager {
 
     /** Update order status */
     public static function updateStatus(int $orderId, string $status): void {
-        $completedAt = in_array($status, ['completed', 'served']) ? 'datetime('now')' : 'NULL';
+        $completedAt = in_array($status, ['completed', 'served']) ? "datetime('now')" : 'NULL';
         Database::query(
             "UPDATE orders SET status = ?, completed_at = $completedAt, updated_at = datetime('now')
              WHERE order_id = ?",
