@@ -10,7 +10,7 @@ class FinancialManager {
     public static function openDrawer(int $locationId, float $openingFloat): int {
         // Close any previously open drawer for this location
         Database::query(
-            "UPDATE cash_drawers SET status = 'closed', closed_at = datetime('now')
+            "UPDATE cash_drawers SET status = 'closed', closed_at = GETDATE()
              WHERE location_id = ? AND status = 'open'",
             [$locationId]
         );
@@ -31,7 +31,7 @@ class FinancialManager {
 
         // Calculate expected cash (opening float + all cash payments - refunds)
         $cashIn = (float) Database::fetchValue(
-            "SELECT COALESCE(SUM(p.amount),0)
+            "SELECT ISNULL(SUM(p.amount),0)
              FROM payments p
              JOIN orders o ON o.order_id = p.order_id
              WHERE o.location_id = ? AND p.payment_method = 'cash'
@@ -45,7 +45,7 @@ class FinancialManager {
         Database::query(
             "UPDATE cash_drawers
              SET closing_amount = ?, expected_amount = ?, variance = ?,
-                 status = 'closed', closed_at = datetime('now')
+                 status = 'closed', closed_at = GETDATE()
              WHERE drawer_id = ?",
             [$closingAmount, $expected, $variance, $drawerId]
         );
@@ -76,7 +76,7 @@ class FinancialManager {
 
     public static function getExpenses(int $locationId, string $startDate, string $endDate): array {
         return Database::fetchAll(
-            "SELECT e.*, u.first_name || ' ' || u.last_name AS created_by_name
+            "SELECT e.*, u.first_name + ' ' + u.last_name AS created_by_name
              FROM expenses e
              LEFT JOIN users u ON u.user_id = e.created_by
              WHERE e.location_id = ? AND e.expense_date BETWEEN ? AND ?
@@ -106,16 +106,16 @@ class FinancialManager {
         $sales = Database::fetchOne(
             "SELECT
                 COUNT(*)                              AS total_orders,
-                COALESCE(SUM(subtotal),0)               AS subtotal,
-                COALESCE(SUM(discount_amount),0)        AS total_discounts,
-                COALESCE(SUM(tax_amount),0)             AS total_tax,
-                COALESCE(SUM(tip_amount),0)             AS total_tips,
-                COALESCE(SUM(delivery_fee),0)           AS total_delivery_fees,
-                COALESCE(SUM(total_amount),0)           AS gross_revenue,
+                ISNULL(SUM(subtotal),0)               AS subtotal,
+                ISNULL(SUM(discount_amount),0)        AS total_discounts,
+                ISNULL(SUM(tax_amount),0)             AS total_tax,
+                ISNULL(SUM(tip_amount),0)             AS total_tips,
+                ISNULL(SUM(delivery_fee),0)           AS total_delivery_fees,
+                ISNULL(SUM(total_amount),0)           AS gross_revenue,
                 SUM(CASE WHEN status='cancelled' THEN 1 ELSE 0 END) AS cancelled_orders,
                 SUM(CASE WHEN status='completed' THEN 1 ELSE 0 END) AS completed_orders
              FROM orders
-             WHERE location_id = ? AND date(created_at) = ?",
+             WHERE location_id = ? AND CAST(created_at AS DATE) = ?",
             [$locationId, $date]
         );
 
@@ -173,13 +173,13 @@ class FinancialManager {
     public static function getTaxReport(int $locationId, string $startDate, string $endDate): array {
         return Database::fetchOne(
             "SELECT
-                COALESCE(SUM(subtotal),0)      AS net_sales,
-                COALESCE(SUM(tax_amount),0)    AS tax_collected,
-                COALESCE(SUM(total_amount),0)  AS gross_sales,
+                ISNULL(SUM(subtotal),0)      AS net_sales,
+                ISNULL(SUM(tax_amount),0)    AS tax_collected,
+                ISNULL(SUM(total_amount),0)  AS gross_sales,
                 COUNT(*)                     AS transaction_count
              FROM orders
              WHERE location_id = ? AND status = 'completed'
-               AND date(created_at) BETWEEN ? AND ?",
+               AND CAST(created_at AS DATE) BETWEEN ? AND ?",
             [$locationId, $startDate, $endDate]
         );
     }

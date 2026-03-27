@@ -9,8 +9,12 @@ define('APP_VERSION', '1.0.0');
 define('APP_URL',     getenv('APP_URL') ?: 'http://localhost');
 define('APP_ENV',     getenv('APP_ENV') ?: 'production'); // development | production
 
-// ── Database (SQLite) ─────────────────────────────────────────────────────────
-define('DB_PATH', getenv('DB_PATH') ?: __DIR__ . '/../database/restaurant_pos.db');
+// ── Database (SQL Server via PDO/SQLSRV) ─────────────────────────────────────
+define('DB_HOST',     getenv('DB_HOST')     ?: 'localhost');
+define('DB_NAME',     getenv('DB_NAME')     ?: 'RestaurantPOS');
+define('DB_USER',     getenv('DB_USER')     ?: 'sa');
+define('DB_PASS',     getenv('DB_PASS')     ?: '');
+define('DB_PORT',     getenv('DB_PORT')     ?: '1433');
 
 // ── Security ─────────────────────────────────────────────────────────────────
 define('APP_KEY',          getenv('APP_KEY')     ?: 'change-this-32-char-secret-key!!');

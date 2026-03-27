@@ -10,11 +10,11 @@ class LocationManager {
                     (SELECT COUNT(*) FROM users u WHERE u.location_id = l.location_id AND u.is_active = 1) AS staff_count,
                     (SELECT COUNT(*) FROM orders o
                      WHERE o.location_id = l.location_id
-                       AND date(o.created_at) = date('now')
+                       AND CAST(o.created_at AS DATE) = CAST(GETDATE() AS DATE)
                        AND o.status = 'completed') AS todays_orders,
-                    (SELECT COALESCE(SUM(total_amount),0) FROM orders o
+                    (SELECT ISNULL(SUM(total_amount),0) FROM orders o
                      WHERE o.location_id = l.location_id
-                       AND date(o.created_at) = date('now')
+                       AND CAST(o.created_at AS DATE) = CAST(GETDATE() AS DATE)
                        AND o.status = 'completed') AS todays_revenue
              FROM locations l
              WHERE l.tenant_id = ?

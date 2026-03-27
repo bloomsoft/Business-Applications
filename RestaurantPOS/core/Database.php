@@ -1,21 +1,19 @@
 <?php
 /**
- * Database Connection — SQLite via PDO
+ * Database Connection — SQL Server via PDO (sqlsrv driver)
  */
 class Database {
     private static ?PDO $instance = null;
 
     public static function getInstance(): PDO {
         if (self::$instance === null) {
-            $dsn = 'sqlite:' . DB_PATH;
+            $dsn = 'sqlsrv:Server=' . DB_HOST . ',' . DB_PORT . ';Database=' . DB_NAME . ';TrustServerCertificate=1';
             try {
-                self::$instance = new PDO($dsn, null, null, [
+                self::$instance = new PDO($dsn, DB_USER, DB_PASS, [
                     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                     PDO::ATTR_EMULATE_PREPARES   => false,
                 ]);
-                self::$instance->exec("PRAGMA foreign_keys = ON");
-                self::$instance->exec("PRAGMA journal_mode = WAL");
             } catch (PDOException $e) {
                 error_log('DB Connection failed: ' . $e->getMessage());
                 http_response_code(503);
