@@ -222,15 +222,15 @@ ob_start();
 $content = ob_get_clean();
 
 // Prepare chart data
-$chartLabels   = array_column($revenue7d, 'period');
-$chartRevenue  = array_column($revenue7d, 'revenue');
-$channelLabels = array_column($channels, 'source');
-$channelData   = array_column($channels, 'order_count');
+$chartLabelsJson   = json_encode(array_column($revenue7d, 'period'));
+$chartRevenueJson  = json_encode(array_map('floatval', array_column($revenue7d, 'revenue')));
+$channelLabelsJson = json_encode(array_column($channels, 'source'));
+$channelDataJson   = json_encode(array_map('intval', array_column($channels, 'order_count')));
 
 $scripts = <<<JS
 <script>
-const rev7Labels = <?= json_encode($chartLabels) ?>;
-const rev7Data   = <?= json_encode(array_map('floatval', $chartRevenue)) ?>;
+const rev7Labels = $chartLabelsJson;
+const rev7Data   = $chartRevenueJson;
 
 renderLineChart('revenueChart', rev7Labels, [{
     label: 'Revenue',
@@ -240,8 +240,8 @@ renderLineChart('revenueChart', rev7Labels, [{
 }]);
 
 renderDoughnut('channelChart',
-    <?= json_encode($channelLabels) ?>,
-    <?= json_encode(array_map('intval', $channelData)) ?>,
+    $channelLabelsJson,
+    $channelDataJson,
     ['#3b82f6','#f97316','#22c55e','#a855f7','#f59e0b']
 );
 </script>

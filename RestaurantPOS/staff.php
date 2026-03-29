@@ -315,7 +315,7 @@ async function clockAction(type) {
     const userId = parseInt(document.getElementById('clockStaffSelect').value);
     const endpoints = { in:'/api/staff/clock-in.php', out:'/api/staff/clock-out.php', break:'/api/staff/break.php' };
     try {
-        await api(endpoints[type],'POST',{user_id:userId,location_id:<?= (int)$locationId ?>});
+        await api(endpoints[type],'POST',{user_id:userId,location_id:{$locationId}});
         showToast('Clock ' + type + ' recorded','success');
         setTimeout(()=>location.reload(),1000);
     } catch(e) { showToast(e.message,'error'); }
@@ -327,7 +327,7 @@ async function generatePayroll() {
     if (!start||!end) { showToast('Select period dates','warning'); return; }
     try {
         const res = await api('/api/staff/payroll.php','POST',{
-            location_id:<?= (int)$locationId ?>, period_start:start, period_end:end
+            location_id:{$locationId}, period_start:start, period_end:end
         });
         showToast('Payroll generated for ' + res.length + ' employees','success');
         setTimeout(()=>location.reload(),1200);

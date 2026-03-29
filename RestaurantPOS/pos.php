@@ -252,8 +252,8 @@ ob_start();
 $content = ob_get_clean();
 $scripts = <<<JS
 <script>
-window.LOCATION_ID = <?= (int)$locationId ?>;
-window.TENANT_ID   = <?= (int)$tenantId ?>;
+window.LOCATION_ID = {$locationId};
+window.TENANT_ID   = {$tenantId};
 
 let currentItem       = null;
 let currentItemQty    = 1;

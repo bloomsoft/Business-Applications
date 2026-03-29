@@ -202,12 +202,17 @@ ob_start();
 
 <?php
 $content = ob_get_clean();
+$revLabelsJson  = json_encode(array_column($revenue, 'period'));
+$revDataJson    = json_encode(array_map('floatval', array_column($revenue, 'revenue')));
+$catLabelsJson  = json_encode(array_column($categories, 'category_name'));
+$catDataJson    = json_encode(array_map('floatval', array_column($categories, 'revenue')));
+$hourlyJson     = json_encode($hourly);
 $scripts = <<<JS
 <script>
-const revLabels = <?= json_encode(array_column($revenue, 'period')) ?>;
-const revData   = <?= json_encode(array_map('floatval', array_column($revenue, 'revenue'))) ?>;
-const catLabels = <?= json_encode(array_column($categories, 'category_name')) ?>;
-const catData   = <?= json_encode(array_map('floatval', array_column($categories, 'revenue'))) ?>;
+const revLabels = $revLabelsJson;
+const revData   = $revDataJson;
+const catLabels = $catLabelsJson;
+const catData   = $catDataJson;
 
 renderLineChart('revTrendChart', revLabels, [{
     label: 'Revenue',
@@ -220,7 +225,7 @@ renderDoughnut('catChart', catLabels, catData,
     ['#3b82f6','#f97316','#22c55e','#a855f7','#f59e0b','#14b8a6','#ec4899','#64748b']);
 
 // Heatmap
-const hourlyData = <?= json_encode($hourly) ?>;
+const hourlyData = $hourlyJson;
 const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const hours = Array.from({length:24}, (_,i) => i === 0 ? '12am' : i < 12 ? i+'am' : i === 12 ? '12pm' : (i-12)+'pm');
 const maxOrders = Math.max(...hourlyData.map(d=>d.order_count), 1);

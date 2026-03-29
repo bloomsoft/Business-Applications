@@ -103,7 +103,7 @@ ob_start();
 $content = ob_get_clean();
 $scripts = <<<JS
 <script>
-window.LOCATION_ID = <?= (int)$locationId ?>;
+window.LOCATION_ID = {$locationId};
 
 async function bumpOrder(orderId, btn) {
     btn.disabled = true;

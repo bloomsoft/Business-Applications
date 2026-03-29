@@ -168,13 +168,13 @@ ob_start();
 
 <?php
 $content = ob_get_clean();
-$locNames    = array_column($comparison, 'location_name');
-$locRevenues = array_map('floatval', array_column($comparison, 'revenue'));
+$locNamesJson    = json_encode(array_column($comparison, 'location_name'));
+$locRevenuesJson = json_encode(array_map('floatval', array_column($comparison, 'revenue')));
 $scripts = <<<JS
 <script>
 renderBarChart('locationChart',
-    <?= json_encode($locNames) ?>,
-    [{label:'Revenue', data: <?= json_encode($locRevenues) ?>,
+    $locNamesJson,
+    [{label:'Revenue', data: $locRevenuesJson,
       backgroundColor:'rgba(249,115,22,.7)'}]
 );
 
