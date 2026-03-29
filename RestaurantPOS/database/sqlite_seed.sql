@@ -23,13 +23,13 @@ INSERT INTO roles (tenant_id, role_name, permissions) VALUES (1, 'Driver', '["de
 -- Users (password = "password123" hashed with bcrypt cost 12)
 INSERT INTO users (tenant_id, location_id, role_id, first_name, last_name, email, phone, password_hash, pin_code)
 VALUES (1, 1, 1, 'John', 'Admin', 'admin@demo.com', '(555) 111-0001',
-        '$2y$12$LJ3m4ys3Lz0BHar6O0O/5OGvSQcfGRPqy4SPSbr.N1ICmQ3SJHwxq', '1234');
+        '$2y$10$CddufnDXtKsOmxQrn7AKwO09BU54WhTDv7hxHLGgX.bxcuXy0OkkW', '1234');
 INSERT INTO users (tenant_id, location_id, role_id, first_name, last_name, email, phone, password_hash, pin_code)
 VALUES (1, 1, 2, 'Jane', 'Manager', 'manager@demo.com', '(555) 111-0002',
-        '$2y$12$LJ3m4ys3Lz0BHar6O0O/5OGvSQcfGRPqy4SPSbr.N1ICmQ3SJHwxq', '5678');
+        '$2y$10$CddufnDXtKsOmxQrn7AKwO09BU54WhTDv7hxHLGgX.bxcuXy0OkkW', '5678');
 INSERT INTO users (tenant_id, location_id, role_id, first_name, last_name, email, phone, password_hash, pin_code)
 VALUES (1, 1, 3, 'Mike', 'Cashier', 'cashier@demo.com', '(555) 111-0003',
-        '$2y$12$LJ3m4ys3Lz0BHar6O0O/5OGvSQcfGRPqy4SPSbr.N1ICmQ3SJHwxq', '1111');
+        '$2y$10$CddufnDXtKsOmxQrn7AKwO09BU54WhTDv7hxHLGgX.bxcuXy0OkkW', '1111');
 
 -- Menu Categories
 INSERT INTO menu_categories (tenant_id, category_name, sort_order) VALUES (1, 'Appetizers', 1);
