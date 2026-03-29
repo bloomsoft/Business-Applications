@@ -1,23 +1,27 @@
 <?php
 /**
- * Database Connection — SQL Server via PDO (sqlsrv driver)
+ * Database Connection — SQLite via PDO (no installation required)
  */
 class Database {
     private static ?PDO $instance = null;
 
     public static function getInstance(): PDO {
         if (self::$instance === null) {
-            $dsn = 'sqlsrv:Server=' . DB_HOST . ',' . DB_PORT . ';Database=' . DB_NAME . ';TrustServerCertificate=1';
+            $dsn = 'sqlite:' . DB_PATH;
             try {
-                self::$instance = new PDO($dsn, DB_USER, DB_PASS, [
+                self::$instance = new PDO($dsn, null, null, [
                     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                     PDO::ATTR_EMULATE_PREPARES   => false,
                 ]);
+                self::$instance->exec("PRAGMA foreign_keys = ON");
+                self::$instance->exec("PRAGMA journal_mode = WAL");
             } catch (PDOException $e) {
+                error_reporting(E_ALL);
+                ini_set('display_errors', 1);
                 error_log('DB Connection failed: ' . $e->getMessage());
                 http_response_code(503);
-                die(json_encode(['error' => 'Database unavailable']));
+                die(json_encode(['error' => 'Database unavailable: ' . $e->getMessage()]));
             }
         }
         return self::$instance;
@@ -45,7 +49,7 @@ class Database {
         return self::query($sql, $params)->fetchColumn();
     }
 
-    /** Insert and return new identity */
+    /** Insert and return new id */
     public static function insert(string $sql, array $params = []): int {
         self::query($sql, $params);
         return (int) self::getInstance()->lastInsertId();

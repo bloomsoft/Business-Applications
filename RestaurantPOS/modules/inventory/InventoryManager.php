@@ -61,7 +61,7 @@ class InventoryManager {
         try {
             Database::query(
                 "UPDATE inventory_items
-                 SET quantity_on_hand = ?, updated_at = GETDATE()
+                 SET quantity_on_hand = ?, updated_at = datetime('now')
                  WHERE inv_item_id = ?",
                 [$newBalance, $invItemId]
             );
@@ -205,7 +205,7 @@ class InventoryManager {
                 );
                 // Update last restocked date
                 Database::query(
-                    "UPDATE inventory_items SET last_restocked = GETDATE() WHERE inv_item_id = ?",
+                    "UPDATE inventory_items SET last_restocked = datetime('now') WHERE inv_item_id = ?",
                     [$poItem['inv_item_id']]
                 );
             }
@@ -218,7 +218,7 @@ class InventoryManager {
             );
             $status = (int)$allReceived === 0 ? 'received' : 'partial';
             Database::query(
-                "UPDATE purchase_orders SET status = ?, received_date = CAST(GETDATE() AS DATE)
+                "UPDATE purchase_orders SET status = ?, received_date = CAST(datetime('now') AS DATE)
                  WHERE po_id = ?",
                 [$status, $poId]
             );
@@ -248,7 +248,7 @@ class InventoryManager {
         $perPage = 30;
         $offset  = ($page - 1) * $perPage;
         $rows = Database::fetchAll(
-            "SELECT m.*, u.first_name + ' ' + u.last_name AS created_by_name
+            "SELECT m.*, u.first_name || ' ' || u.last_name AS created_by_name
              FROM inventory_movements m
              LEFT JOIN users u ON u.user_id = m.created_by
              WHERE m.inv_item_id = ?

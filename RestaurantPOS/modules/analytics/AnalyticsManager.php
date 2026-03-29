@@ -12,23 +12,23 @@ class AnalyticsManager {
         $today = Database::fetchOne(
             "SELECT
                 COUNT(*)                                     AS total_orders,
-                ISNULL(SUM(total_amount),0)                  AS total_revenue,
-                ISNULL(AVG(total_amount),0)                  AS avg_order_value,
+                COALESCE(SUM(total_amount),0)                  AS total_revenue,
+                COALESCE(AVG(total_amount),0)                  AS avg_order_value,
                 COUNT(DISTINCT customer_id)                  AS unique_customers,
                 SUM(CASE WHEN order_type='dine-in'  THEN 1 ELSE 0 END) AS dine_in,
                 SUM(CASE WHEN order_type='takeout'  THEN 1 ELSE 0 END) AS takeout,
                 SUM(CASE WHEN order_type='delivery' THEN 1 ELSE 0 END) AS delivery,
                 SUM(CASE WHEN order_type IN ('qr-order','kiosk') THEN 1 ELSE 0 END) AS self_service
              FROM orders
-             WHERE location_id = ? AND CAST(created_at AS DATE) = ? AND status = 'completed'",
+             WHERE location_id = ? AND date(created_at) = ? AND status = 'completed'",
             [$locationId, $date]
         );
 
         $prev = Database::fetchOne(
-            "SELECT ISNULL(SUM(total_amount),0) AS total_revenue,
+            "SELECT COALESCE(SUM(total_amount),0) AS total_revenue,
                     COUNT(*) AS total_orders
              FROM orders
-             WHERE location_id = ? AND CAST(created_at AS DATE) = ? AND status = 'completed'",
+             WHERE location_id = ? AND date(created_at) = ? AND status = 'completed'",
             [$locationId, $prevDate]
         );
 
@@ -47,22 +47,22 @@ class AnalyticsManager {
         $groupBy = match($period) {
             'weekly'  => "DATEPART(YEAR, created_at), DATEPART(WEEK, created_at)",
             'monthly' => "YEAR(created_at), MONTH(created_at)",
-            default   => "CAST(created_at AS DATE)",
+            default   => "date(created_at)",
         };
         $label = match($period) {
             'weekly'  => "CAST(DATEPART(YEAR,created_at) AS VARCHAR) + '-W' + CAST(DATEPART(WEEK,created_at) AS VARCHAR)",
             'monthly' => "FORMAT(created_at,'yyyy-MM')",
-            default   => "CAST(created_at AS DATE)",
+            default   => "date(created_at)",
         };
 
         return Database::fetchAll(
             "SELECT $label AS period,
-                    ISNULL(SUM(total_amount),0)  AS revenue,
+                    COALESCE(SUM(total_amount),0)  AS revenue,
                     COUNT(*)                      AS order_count,
-                    ISNULL(AVG(total_amount),0)   AS avg_order_value
+                    COALESCE(AVG(total_amount),0)   AS avg_order_value
              FROM orders
              WHERE location_id = ?
-               AND created_at >= DATEADD(DAY,-?,GETDATE())
+               AND created_at >= DATEADD(DAY,-?,datetime('now'))
                AND status = 'completed'
              GROUP BY $groupBy
              ORDER BY MIN(created_at)",
@@ -85,12 +85,12 @@ class AnalyticsManager {
              JOIN orders o    ON o.order_id  = oi.order_id
              JOIN menu_items mi ON mi.item_id = oi.item_id
              WHERE o.tenant_id = ?
-               AND CAST(o.created_at AS DATE) BETWEEN ? AND ?
+               AND date(o.created_at) BETWEEN ? AND ?
                AND o.status = 'completed'
                AND oi.status != 'void'
              GROUP BY mi.item_id, mi.item_name, mi.category_id
              ORDER BY qty_sold DESC
-             OFFSET 0 ROWS FETCH NEXT ? ROWS ONLY",
+             LIMIT ?",
             [$tenantId, $startDate, $endDate, $limit]
         );
     }
@@ -101,10 +101,10 @@ class AnalyticsManager {
             "SELECT DATEPART(WEEKDAY, created_at) AS day_of_week,
                     DATEPART(HOUR, created_at)    AS hour_of_day,
                     COUNT(*)                       AS order_count,
-                    ISNULL(SUM(total_amount),0)   AS revenue
+                    COALESCE(SUM(total_amount),0)   AS revenue
              FROM orders
              WHERE location_id = ?
-               AND created_at >= DATEADD(DAY,-?,GETDATE())
+               AND created_at >= DATEADD(DAY,-?,datetime('now'))
                AND status = 'completed'
              GROUP BY DATEPART(WEEKDAY,created_at), DATEPART(HOUR,created_at)
              ORDER BY day_of_week, hour_of_day",
@@ -115,15 +115,15 @@ class AnalyticsManager {
     /** Staff performance */
     public static function getStaffPerformance(int $locationId, string $startDate, string $endDate): array {
         return Database::fetchAll(
-            "SELECT u.user_id, u.first_name + ' ' + u.last_name AS staff_name,
+            "SELECT u.user_id, u.first_name || ' ' || u.last_name AS staff_name,
                     COUNT(o.order_id)             AS orders_handled,
-                    ISNULL(SUM(o.total_amount),0) AS total_revenue,
-                    ISNULL(AVG(o.total_amount),0) AS avg_order_value,
-                    ISNULL(SUM(o.tip_amount),0)   AS total_tips
+                    COALESCE(SUM(o.total_amount),0) AS total_revenue,
+                    COALESCE(AVG(o.total_amount),0) AS avg_order_value,
+                    COALESCE(SUM(o.tip_amount),0)   AS total_tips
              FROM users u
              LEFT JOIN orders o ON o.user_id = u.user_id
                  AND o.status = 'completed'
-                 AND CAST(o.created_at AS DATE) BETWEEN ? AND ?
+                 AND date(o.created_at) BETWEEN ? AND ?
              WHERE u.location_id = ? AND u.is_active = 1
              GROUP BY u.user_id, u.first_name, u.last_name
              ORDER BY total_revenue DESC",
@@ -143,7 +143,7 @@ class AnalyticsManager {
              JOIN menu_items mi ON mi.item_id = oi.item_id
              JOIN menu_categories mc ON mc.category_id = mi.category_id
              WHERE o.tenant_id = ?
-               AND CAST(o.created_at AS DATE) BETWEEN ? AND ?
+               AND date(o.created_at) BETWEEN ? AND ?
                AND o.status = 'completed'
              GROUP BY mc.category_id, mc.category_name
              ORDER BY revenue DESC",
@@ -156,16 +156,16 @@ class AnalyticsManager {
         return Database::fetchAll(
             "SELECT source,
                     COUNT(*)                     AS order_count,
-                    ISNULL(SUM(total_amount),0)  AS revenue,
+                    COALESCE(SUM(total_amount),0)  AS revenue,
                     ROUND(
                         100.0 * COUNT(*) / NULLIF((SELECT COUNT(*) FROM orders
                             WHERE location_id = ? AND status = 'completed'
-                            AND CAST(created_at AS DATE) BETWEEN ? AND ?), 0), 1
+                            AND date(created_at) BETWEEN ? AND ?), 0), 1
                     ) AS percentage
              FROM orders
              WHERE location_id = ?
                AND status = 'completed'
-               AND CAST(created_at AS DATE) BETWEEN ? AND ?
+               AND date(created_at) BETWEEN ? AND ?
              GROUP BY source
              ORDER BY order_count DESC",
             [$locationId, $startDate, $endDate, $locationId, $startDate, $endDate]
@@ -178,27 +178,27 @@ class AnalyticsManager {
         $end   = date('Y-m-t', strtotime($start));
 
         $revenue = (float) Database::fetchValue(
-            "SELECT ISNULL(SUM(total_amount),0) FROM orders
+            "SELECT COALESCE(SUM(total_amount),0) FROM orders
              WHERE location_id = ? AND status='completed'
-               AND CAST(created_at AS DATE) BETWEEN ? AND ?",
+               AND date(created_at) BETWEEN ? AND ?",
             [$locationId, $start, $end]
         );
         $cogs = (float) Database::fetchValue(
-            "SELECT ISNULL(SUM(oi.quantity * mi.cost_price),0)
+            "SELECT COALESCE(SUM(oi.quantity * mi.cost_price),0)
              FROM order_items oi
              JOIN orders o ON o.order_id = oi.order_id
              JOIN menu_items mi ON mi.item_id = oi.item_id
              WHERE o.location_id = ? AND o.status='completed'
-               AND CAST(o.created_at AS DATE) BETWEEN ? AND ?",
+               AND date(o.created_at) BETWEEN ? AND ?",
             [$locationId, $start, $end]
         );
         $expenses = (float) Database::fetchValue(
-            "SELECT ISNULL(SUM(amount),0) FROM expenses
+            "SELECT COALESCE(SUM(amount),0) FROM expenses
              WHERE location_id = ? AND expense_date BETWEEN ? AND ?",
             [$locationId, $start, $end]
         );
         $payroll = (float) Database::fetchValue(
-            "SELECT ISNULL(SUM(gross_pay),0) FROM payroll
+            "SELECT COALESCE(SUM(gross_pay),0) FROM payroll
              WHERE location_id = ? AND period_start >= ? AND period_end <= ?",
             [$locationId, $start, $end]
         );

@@ -78,7 +78,7 @@ class StaffManager {
         $weekEnd = date('Y-m-d', strtotime($weekStart . ' +6 days'));
         $shifts  = Database::fetchAll(
             "SELECT s.*,
-                    u.first_name + ' ' + u.last_name AS staff_name,
+                    u.first_name || ' ' || u.last_name AS staff_name,
                     r.role_name
              FROM shifts s
              JOIN users u ON u.user_id = s.user_id
@@ -114,7 +114,7 @@ class StaffManager {
         if ($open) throw new RuntimeException('Already clocked in');
 
         return Database::insert(
-            "INSERT INTO time_clocks (user_id, location_id, clock_in) VALUES (?,?,GETDATE())",
+            "INSERT INTO time_clocks (user_id, location_id, clock_in) VALUES (?,?,datetime('now'))",
             [$userId, $locationId]
         );
     }
@@ -132,7 +132,7 @@ class StaffManager {
 
         Database::query(
             "UPDATE time_clocks
-             SET clock_out = GETDATE(), total_hours = ?, overtime_hours = ?
+             SET clock_out = datetime('now'), total_hours = ?, overtime_hours = ?
              WHERE clock_id = ?",
             [$totalHours, $overtimeHours, $clock['clock_id']]
         );
@@ -142,7 +142,7 @@ class StaffManager {
 
     public static function startBreak(int $userId): void {
         Database::query(
-            "UPDATE time_clocks SET break_start = GETDATE()
+            "UPDATE time_clocks SET break_start = datetime('now')
              WHERE user_id = ? AND clock_out IS NULL",
             [$userId]
         );
@@ -150,7 +150,7 @@ class StaffManager {
 
     public static function endBreak(int $userId): void {
         Database::query(
-            "UPDATE time_clocks SET break_end = GETDATE()
+            "UPDATE time_clocks SET break_end = datetime('now')
              WHERE user_id = ? AND clock_out IS NULL",
             [$userId]
         );
@@ -159,7 +159,7 @@ class StaffManager {
     public static function getTimeLog(int $userId, string $startDate, string $endDate): array {
         return Database::fetchAll(
             "SELECT * FROM time_clocks
-             WHERE user_id = ? AND CAST(clock_in AS DATE) BETWEEN ? AND ?
+             WHERE user_id = ? AND date(clock_in) BETWEEN ? AND ?
              ORDER BY clock_in",
             [$userId, $startDate, $endDate]
         );
@@ -169,7 +169,7 @@ class StaffManager {
 
     public static function generatePayroll(int $locationId, string $periodStart, string $periodEnd): array {
         $staff = Database::fetchAll(
-            "SELECT u.user_id, u.first_name + ' ' + u.last_name AS full_name
+            "SELECT u.user_id, u.first_name || ' ' || u.last_name AS full_name
              FROM users u WHERE u.location_id = ? AND u.is_active = 1",
             [$locationId]
         );
@@ -177,10 +177,10 @@ class StaffManager {
         $results = [];
         foreach ($staff as $employee) {
             $hours = Database::fetchOne(
-                "SELECT ISNULL(SUM(total_hours),0)    AS regular_hours,
-                        ISNULL(SUM(overtime_hours),0) AS overtime_hours
+                "SELECT COALESCE(SUM(total_hours),0)    AS regular_hours,
+                        COALESCE(SUM(overtime_hours),0) AS overtime_hours
                  FROM time_clocks
-                 WHERE user_id = ? AND CAST(clock_in AS DATE) BETWEEN ? AND ?",
+                 WHERE user_id = ? AND date(clock_in) BETWEEN ? AND ?",
                 [$employee['user_id'], $periodStart, $periodEnd]
             );
 
@@ -188,9 +188,9 @@ class StaffManager {
             $hourlyRate = 15.00;
 
             $tips = (float) Database::fetchValue(
-                "SELECT ISNULL(SUM(tip_amount),0) FROM orders
+                "SELECT COALESCE(SUM(tip_amount),0) FROM orders
                  WHERE user_id = ? AND status='completed'
-                   AND CAST(created_at AS DATE) BETWEEN ? AND ?",
+                   AND date(created_at) BETWEEN ? AND ?",
                 [$employee['user_id'], $periodStart, $periodEnd]
             );
 

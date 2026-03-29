@@ -10,11 +10,11 @@ class LocationManager {
                     (SELECT COUNT(*) FROM users u WHERE u.location_id = l.location_id AND u.is_active = 1) AS staff_count,
                     (SELECT COUNT(*) FROM orders o
                      WHERE o.location_id = l.location_id
-                       AND CAST(o.created_at AS DATE) = CAST(GETDATE() AS DATE)
+                       AND date(o.created_at) = date('now')
                        AND o.status = 'completed') AS todays_orders,
-                    (SELECT ISNULL(SUM(total_amount),0) FROM orders o
+                    (SELECT COALESCE(SUM(total_amount),0) FROM orders o
                      WHERE o.location_id = l.location_id
-                       AND CAST(o.created_at AS DATE) = CAST(GETDATE() AS DATE)
+                       AND date(o.created_at) = date('now')
                        AND o.status = 'completed') AS todays_revenue
              FROM locations l
              WHERE l.tenant_id = ?
@@ -76,8 +76,8 @@ class LocationManager {
         return Database::fetchAll(
             "SELECT l.location_id, l.location_name,
                     COUNT(o.order_id)              AS order_count,
-                    ISNULL(SUM(o.total_amount),0)  AS revenue,
-                    ISNULL(AVG(o.total_amount),0)  AS avg_order_value,
+                    COALESCE(SUM(o.total_amount),0)  AS revenue,
+                    COALESCE(AVG(o.total_amount),0)  AS avg_order_value,
                     COUNT(DISTINCT o.customer_id)  AS unique_customers
              FROM locations l
              LEFT JOIN orders o ON o.location_id = l.location_id

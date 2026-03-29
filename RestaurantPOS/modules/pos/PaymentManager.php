@@ -29,7 +29,7 @@ class PaymentManager {
                 "INSERT INTO payments
                     (order_id, payment_method, amount, tip_amount, status,
                      reference_no, gateway, gateway_txn_id, processed_by, processed_at)
-                 VALUES (?,?,?,?,?,?,?,?,?,GETDATE())",
+                 VALUES (?,?,?,?,?,?,?,?,?,datetime('now'))",
                 [
                     $orderId, $method, $amount, $tip,
                     'completed',
@@ -45,8 +45,8 @@ class PaymentManager {
                 "UPDATE orders SET tip_amount = tip_amount + ?,
                                    total_amount = total_amount + ?,
                                    status = 'completed',
-                                   completed_at = GETDATE(),
-                                   updated_at   = GETDATE()
+                                   completed_at = datetime('now'),
+                                   updated_at   = datetime('now')
                  WHERE order_id = ?",
                 [$tip, $tip, $orderId]
             );
@@ -105,7 +105,7 @@ class PaymentManager {
              FROM payments p
              JOIN orders o ON o.order_id = p.order_id
              WHERE o.location_id = ?
-               AND CAST(p.processed_at AS DATE) = ?
+               AND date(p.processed_at) = ?
                AND p.status = 'completed'
              GROUP BY p.payment_method",
             [$locationId, $date]
@@ -135,7 +135,7 @@ class PaymentManager {
 
         Database::query(
             "UPDATE customers SET loyalty_points = ?, total_visits = total_visits + 1,
-                    total_spent = total_spent + ?, last_visit = GETDATE()
+                    total_spent = total_spent + ?, last_visit = datetime('now')
              WHERE customer_id = ?",
             [$newBalance, $amount, $customerId]
         );
