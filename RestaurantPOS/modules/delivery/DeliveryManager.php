@@ -51,8 +51,8 @@ class DeliveryManager {
     /** Update delivery status */
     public static function updateStatus(int $deliveryId, string $status): void {
         $tsCol = match($status) {
-            'picked_up'   => ', picked_up_at = GETDATE()',
-            'delivered'   => ', delivered_at = GETDATE()',
+            'picked_up'   => ', picked_up_at = datetime('now')',
+            'delivered'   => ', delivered_at = datetime('now')',
             default       => '',
         };
         Database::query(
@@ -127,9 +127,9 @@ class DeliveryManager {
     public static function getActiveDeliveries(int $locationId): array {
         return Database::fetchAll(
             "SELECT d.*, o.order_number, o.total_amount, o.created_at AS order_time,
-                    u.first_name + ' ' + u.last_name AS driver_name,
+                    u.first_name || ' ' || u.last_name AS driver_name,
                     u.phone AS driver_phone,
-                    DATEDIFF(MINUTE, o.created_at, GETDATE()) AS elapsed_min
+                    DATEDIFF(MINUTE, o.created_at, datetime('now')) AS elapsed_min
              FROM delivery_orders d
              JOIN orders o ON o.order_id = d.order_id
              LEFT JOIN users u ON u.user_id = d.driver_id
@@ -166,7 +166,7 @@ class DeliveryManager {
     /** Get available drivers */
     public static function getAvailableDrivers(int $locationId): array {
         return Database::fetchAll(
-            "SELECT u.user_id, u.first_name + ' ' + u.last_name AS full_name, u.phone,
+            "SELECT u.user_id, u.first_name || ' ' || u.last_name AS full_name, u.phone,
                     COUNT(d.delivery_id) AS active_deliveries
              FROM users u
              LEFT JOIN delivery_orders d ON d.driver_id = u.user_id
