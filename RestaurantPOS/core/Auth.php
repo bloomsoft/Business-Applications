@@ -25,7 +25,7 @@ class Auth {
         }
         self::setSession($user);
         Database::query(
-            "UPDATE users SET last_login = GETDATE() WHERE user_id = ?",
+            "UPDATE users SET last_login = datetime('now') WHERE user_id = ?",
             [$user['user_id']]
         );
         return ['success' => true, 'user' => self::safeUser($user)];

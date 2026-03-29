@@ -8,7 +8,7 @@ $date       = get('date', date('Y-m-d'));
 
 $reservations = Database::fetchAll(
     "SELECT r.*, t.table_number, t.capacity,
-            c.first_name + ' ' + ISNULL(c.last_name,'') AS customer_name,
+            c.first_name || ' ' || COALESCE(c.last_name,'') AS customer_name,
             c.phone AS customer_phone
      FROM reservations r
      LEFT JOIN restaurant_tables t ON t.table_id = r.table_id

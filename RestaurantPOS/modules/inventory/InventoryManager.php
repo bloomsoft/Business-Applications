@@ -218,7 +218,7 @@ class InventoryManager {
             );
             $status = (int)$allReceived === 0 ? 'received' : 'partial';
             Database::query(
-                "UPDATE purchase_orders SET status = ?, received_date = CAST(datetime('now') AS DATE)
+                "UPDATE purchase_orders SET status = ?, received_date = date('now')
                  WHERE po_id = ?",
                 [$status, $poId]
             );
@@ -253,8 +253,8 @@ class InventoryManager {
              LEFT JOIN users u ON u.user_id = m.created_by
              WHERE m.inv_item_id = ?
              ORDER BY m.created_at DESC
-             OFFSET ? ROWS FETCH NEXT ? ROWS ONLY",
-            [$invItemId, $offset, $perPage]
+             LIMIT ? OFFSET ?",
+            [$invItemId, $perPage, $offset]
         );
         return $rows;
     }

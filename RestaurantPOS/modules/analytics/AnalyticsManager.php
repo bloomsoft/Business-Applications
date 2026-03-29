@@ -44,29 +44,30 @@ class AnalyticsManager {
 
     /** Revenue by period (daily/weekly/monthly) */
     public static function getRevenueChart(int $locationId, string $period = 'daily', int $days = 30): array {
+        $since   = date('Y-m-d', strtotime("-$days days"));
         $groupBy = match($period) {
-            'weekly'  => "DATEPART(YEAR, created_at), DATEPART(WEEK, created_at)",
-            'monthly' => "YEAR(created_at), MONTH(created_at)",
+            'weekly'  => "strftime('%Y-%W', created_at)",
+            'monthly' => "strftime('%Y-%m', created_at)",
             default   => "date(created_at)",
         };
         $label = match($period) {
-            'weekly'  => "CAST(DATEPART(YEAR,created_at) AS VARCHAR) + '-W' + CAST(DATEPART(WEEK,created_at) AS VARCHAR)",
-            'monthly' => "FORMAT(created_at,'yyyy-MM')",
+            'weekly'  => "strftime('%Y-W%W', created_at)",
+            'monthly' => "strftime('%Y-%m', created_at)",
             default   => "date(created_at)",
         };
 
         return Database::fetchAll(
             "SELECT $label AS period,
                     COALESCE(SUM(total_amount),0)  AS revenue,
-                    COUNT(*)                      AS order_count,
-                    COALESCE(AVG(total_amount),0)   AS avg_order_value
+                    COUNT(*)                       AS order_count,
+                    COALESCE(AVG(total_amount),0)  AS avg_order_value
              FROM orders
              WHERE location_id = ?
-               AND created_at >= DATEADD(DAY,-?,datetime('now'))
+               AND date(created_at) >= ?
                AND status = 'completed'
              GROUP BY $groupBy
              ORDER BY MIN(created_at)",
-            [$locationId, $days]
+            [$locationId, $since]
         );
     }
 
@@ -97,18 +98,19 @@ class AnalyticsManager {
 
     /** Hourly sales heatmap */
     public static function getHourlySales(int $locationId, int $days = 7): array {
+        $since = date('Y-m-d', strtotime("-$days days"));
         return Database::fetchAll(
-            "SELECT DATEPART(WEEKDAY, created_at) AS day_of_week,
-                    DATEPART(HOUR, created_at)    AS hour_of_day,
+            "SELECT CAST(strftime('%w', created_at) AS INTEGER) AS day_of_week,
+                    CAST(strftime('%H', created_at) AS INTEGER) AS hour_of_day,
                     COUNT(*)                       AS order_count,
-                    COALESCE(SUM(total_amount),0)   AS revenue
+                    COALESCE(SUM(total_amount),0)  AS revenue
              FROM orders
              WHERE location_id = ?
-               AND created_at >= DATEADD(DAY,-?,datetime('now'))
+               AND date(created_at) >= ?
                AND status = 'completed'
-             GROUP BY DATEPART(WEEKDAY,created_at), DATEPART(HOUR,created_at)
+             GROUP BY strftime('%w', created_at), strftime('%H', created_at)
              ORDER BY day_of_week, hour_of_day",
-            [$locationId, $days]
+            [$locationId, $since]
         );
     }
 

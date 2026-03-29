@@ -173,10 +173,10 @@ ob_start();
             <div class="card-body p-0">
                 <?php
                 $todayLog = Database::fetchAll(
-                    "SELECT tc.*, u.first_name + ' ' + u.last_name AS name
+                    "SELECT tc.*, u.first_name || ' ' || u.last_name AS name
                      FROM time_clocks tc
                      JOIN users u ON u.user_id = tc.user_id
-                     WHERE tc.location_id = ? AND CAST(tc.clock_in AS DATE) = ?
+                     WHERE tc.location_id = ? AND date(tc.clock_in) = ?
                      ORDER BY tc.clock_in DESC",
                     [$locationId, $today]
                 );
@@ -233,12 +233,12 @@ ob_start();
     <div class="card-body p-0">
         <?php
         $payrolls = Database::fetchAll(
-            "SELECT p.*, u.first_name + ' ' + u.last_name AS staff_name
+            "SELECT p.*, u.first_name || ' ' || u.last_name AS staff_name
              FROM payroll p
              JOIN users u ON u.user_id = p.user_id
              WHERE p.location_id = ?
              ORDER BY p.created_at DESC
-             OFFSET 0 ROWS FETCH NEXT 20 ROWS ONLY",
+             LIMIT 20",
             [$locationId]
         );
         ?>

@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($section === 'company') {
         Database::query(
-            "UPDATE tenants SET company_name = ?, email = ?, phone = ?, address = ?, updated_at = GETDATE()
+            "UPDATE tenants SET company_name = ?, email = ?, phone = ?, address = ?, updated_at = datetime('now')
              WHERE tenant_id = ?",
             [post('company_name'), post('email'), post('phone'), post('address'), $tenantId]
         );

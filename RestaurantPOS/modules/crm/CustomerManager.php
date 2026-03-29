@@ -52,12 +52,12 @@ class CustomerManager {
     public static function find(int $tenantId, string $search): array {
         $term = '%' . $search . '%';
         return Database::fetchAll(
-            "SELECT TOP 20 customer_id, first_name, last_name, email, phone,
+            "SELECT customer_id, first_name, last_name, email, phone,
                     loyalty_points, total_visits, total_spent, segment
              FROM customers
              WHERE tenant_id = ? AND is_active = 1
                AND (first_name LIKE ? OR last_name LIKE ? OR email LIKE ? OR phone LIKE ?)
-             ORDER BY total_spent DESC",
+             ORDER BY total_spent DESC LIMIT 20",
             [$tenantId, $term, $term, $term, $term]
         );
     }
@@ -71,17 +71,17 @@ class CustomerManager {
 
         $customer['recent_orders'] = Database::fetchAll(
             "SELECT order_id, order_number, order_type, total_amount, status, created_at
-             FROM orders WHERE customer_id = ? ORDER BY created_at DESC OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY",
+             FROM orders WHERE customer_id = ? ORDER BY created_at DESC LIMIT 10",
             [$customerId]
         );
         $customer['loyalty_history'] = Database::fetchAll(
             "SELECT * FROM loyalty_transactions WHERE customer_id = ?
-             ORDER BY created_at DESC OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY",
+             ORDER BY created_at DESC LIMIT 10",
             [$customerId]
         );
         $customer['feedbacks'] = Database::fetchAll(
             "SELECT * FROM customer_feedback WHERE customer_id = ?
-             ORDER BY created_at DESC OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY",
+             ORDER BY created_at DESC LIMIT 5",
             [$customerId]
         );
         return $customer;
@@ -169,8 +169,8 @@ class CustomerManager {
                 CASE
                     WHEN total_visits = 0                             THEN 'new'
                     WHEN total_spent >= 1000 AND total_visits >= 20   THEN 'vip'
-                    WHEN last_visit < DATEADD(DAY,-90,datetime('now'))      THEN 'lost'
-                    WHEN last_visit < DATEADD(DAY,-45,datetime('now'))      THEN 'at-risk'
+                    WHEN last_visit < date('now','-90 days')      THEN 'lost'
+                    WHEN last_visit < date('now','-45 days')      THEN 'at-risk'
                     ELSE 'regular'
                 END
              WHERE tenant_id = ?",
@@ -212,7 +212,7 @@ class CustomerManager {
                 SUM(CASE WHEN rating <= 2 THEN 1 ELSE 0 END) AS negative
              FROM customer_feedback
              WHERE tenant_id = ?
-               AND created_at >= DATEADD(DAY,-?,datetime('now'))",
+               AND created_at >= date('now','-' || ? || ' days')",
             [$tenantId, (int)$period]
         );
     }
