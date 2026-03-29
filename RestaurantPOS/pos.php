@@ -322,17 +322,17 @@ async function selectItem(itemId, itemName, price) {
 
     body.innerHTML = mods.map(grp => `
         <div class="mb-3">
-            <label class="fw-600">${grp.group_name}
-                ${grp.is_required ? '<span class="badge bg-danger ms-1">Required</span>' : ''}
+            <label class="fw-600">\${grp.group_name}
+                \${grp.is_required ? '<span class="badge bg-danger ms-1">Required</span>' : ''}
             </label>
-            ${grp.options.map(opt => `
+            \${grp.options.map(opt => `
                 <div class="form-check">
-                    <input class="form-check-input modifier-check" type="${grp.selection_type==='single'?'radio':'checkbox'}"
-                           name="grp_${grp.group_id}" value="${opt.modifier_id}"
-                           id="mod_${opt.modifier_id}">
-                    <label class="form-check-label" for="mod_${opt.modifier_id}">
-                        ${opt.modifier_name}
-                        ${opt.price_add > 0 ? '<span class="text-accent">+' + money(opt.price_add) + '</span>' : ''}
+                    <input class="form-check-input modifier-check" type="\${grp.selection_type==='single'?'radio':'checkbox'}"
+                           name="grp_\${grp.group_id}" value="\${opt.modifier_id}"
+                           id="mod_\${opt.modifier_id}">
+                    <label class="form-check-label" for="mod_\${opt.modifier_id}">
+                        \${opt.modifier_name}
+                        \${opt.price_add > 0 ? '<span class="text-accent">+' + money(opt.price_add) + '</span>' : ''}
                     </label>
                 </div>`).join('')}
         </div>`).join('');
@@ -387,9 +387,9 @@ async function searchCustomer(q) {
     const div = document.getElementById('customerResults');
     div.innerHTML = res.map(c => `
         <a href="#" class="list-group-item list-group-item-action py-1"
-           onclick="selectCustomer(${c.customer_id},'${c.first_name} ${c.last_name}');return false">
-            ${c.first_name} ${c.last_name} — ${c.phone||c.email||''}
-            <span class="badge bg-warning text-dark ms-1">${c.loyalty_points} pts</span>
+           onclick="selectCustomer(\${c.customer_id},'\${c.first_name} \${c.last_name}');return false">
+            \${c.first_name} \${c.last_name} — \${c.phone||c.email||''}
+            <span class="badge bg-warning text-dark ms-1">\${c.loyalty_points} pts</span>
         </a>`).join('');
 }
 

@@ -51,9 +51,9 @@ class DeliveryManager {
     /** Update delivery status */
     public static function updateStatus(int $deliveryId, string $status): void {
         $tsCol = match($status) {
-            'picked_up'   => ', picked_up_at = datetime('now')',
-            'delivered'   => ', delivered_at = datetime('now')',
-            default       => '',
+            'picked_up' => ", picked_up_at = datetime('now')",
+            'delivered' => ", delivered_at = datetime('now')",
+            default     => '',
         };
         Database::query(
             "UPDATE delivery_orders SET status = ? $tsCol WHERE delivery_id = ?",
