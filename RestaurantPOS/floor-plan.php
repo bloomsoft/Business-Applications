@@ -100,26 +100,26 @@ function selectTable(tableId, status, orderId) {
 
     let actions = '';
     if (status === 'available') {
-        actions = `<a href="/pos.php?table_id=${tableId}" class="btn btn-accent w-100 mb-2">
+        actions = `<a href="/pos.php?table_id=\${tableId}" class="btn btn-accent w-100 mb-2">
             <i class="bi bi-plus me-1"></i>New Order</a>`;
     }
     if (status === 'occupied' && orderId) {
         actions = `
-            <a href="/pos.php?order_id=${orderId}" class="btn btn-primary w-100 mb-2">
-                <i class="bi bi-pencil me-1"></i>View Order #${orderId}</a>
-            <button class="btn btn-outline-success w-100 mb-2" onclick="setTableStatus(${tableId},'available')">
+            <a href="/pos.php?order_id=\${orderId}" class="btn btn-primary w-100 mb-2">
+                <i class="bi bi-pencil me-1"></i>View Order #\${orderId}</a>
+            <button class="btn btn-outline-success w-100 mb-2" onclick="setTableStatus(\${tableId},'available')">
                 <i class="bi bi-check me-1"></i>Mark Available</button>`;
     }
     if (status === 'reserved') {
-        actions = `<button class="btn btn-success w-100 mb-2" onclick="setTableStatus(${tableId},'occupied')">
+        actions = `<button class="btn btn-success w-100 mb-2" onclick="setTableStatus(\${tableId},'occupied')">
             <i class="bi bi-person-check me-1"></i>Seat Guests</button>`;
     }
     actions += `
         <hr>
         <div class="d-flex gap-2">
-            <button class="btn btn-outline-secondary flex-grow-1" onclick="setTableStatus(${tableId},'cleaning')">Cleaning</button>
-            <button class="btn btn-outline-secondary flex-grow-1" onclick="setTableStatus(${tableId},'reserved')">Reserve</button>
-            <button class="btn btn-outline-secondary flex-grow-1" onclick="setTableStatus(${tableId},'available')">Free</button>
+            <button class="btn btn-outline-secondary flex-grow-1" onclick="setTableStatus(\${tableId},'cleaning')">Cleaning</button>
+            <button class="btn btn-outline-secondary flex-grow-1" onclick="setTableStatus(\${tableId},'reserved')">Reserve</button>
+            <button class="btn btn-outline-secondary flex-grow-1" onclick="setTableStatus(\${tableId},'available')">Free</button>
         </div>`;
 
     body.innerHTML = actions;

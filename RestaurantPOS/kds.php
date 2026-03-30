@@ -109,7 +109,7 @@ async function bumpOrder(orderId, btn) {
     btn.disabled = true;
     try {
         await api('/api/orders/update-status.php','POST',{order_id:orderId,status:'ready'});
-        document.querySelector(`[data-order-id="${orderId}"]`).remove();
+        document.querySelector(`[data-order-id="\${orderId}"]`).remove();
         checkEmpty();
         showToast('Order marked ready!','success');
     } catch(e) { showToast(e.message,'error'); btn.disabled=false; }

@@ -231,17 +231,17 @@ const hours = Array.from({length:24}, (_,i) => i === 0 ? '12am' : i < 12 ? i+'am
 const maxOrders = Math.max(...hourlyData.map(d=>d.order_count), 1);
 
 let html = '<table class="table table-sm" style="font-size:11px"><thead><tr><th></th>';
-hours.forEach(h => html += `<th style="writing-mode:vertical-lr;transform:rotate(180deg);white-space:nowrap;padding:2px">${h}</th>`);
+hours.forEach(h => html += `<th style="writing-mode:vertical-lr;transform:rotate(180deg);white-space:nowrap;padding:2px">\${h}</th>`);
 html += '</tr></thead><tbody>';
 days.forEach((day, di) => {
-    html += `<tr><td class="fw-600">${day}</td>`;
+    html += `<tr><td class="fw-600">\${day}</td>`;
     hours.forEach((_, hi) => {
         const cell = hourlyData.find(d => d.day_of_week == di+1 && d.hour_of_day == hi);
         const count = cell ? cell.order_count : 0;
         const intensity = Math.round((count / maxOrders) * 100);
-        const bg = count === 0 ? '#f8fafc' : `hsl(24,95%,${90-intensity*0.5}%)`;
-        html += `<td style="background:${bg};padding:4px;text-align:center" title="${day} ${hours[hi]}: ${count} orders">
-            ${count || ''}</td>`;
+        const bg = count === 0 ? '#f8fafc' : `hsl(24,95%,\${90-intensity*0.5}%)`;
+        html += `<td style="background:\${bg};padding:4px;text-align:center" title="\${day} \${hours[hi]}: \${count} orders">
+            \${count || ''}</td>`;
     });
     html += '</tr>';
 });
