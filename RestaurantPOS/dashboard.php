@@ -20,10 +20,10 @@ ob_start();
 <div class="row g-3 mb-4">
     <?php
     $kpis_display = [
-        ['label'=>"Today's Revenue",  'value'=>money($kpis['total_revenue']),   'icon'=>'bi-currency-dollar', 'color'=>'bg-success bg-opacity-10 text-success', 'change'=>$kpis['revenue_change']],
-        ['label'=>"Total Orders",     'value'=>number_format($kpis['total_orders']),  'icon'=>'bi-receipt',        'color'=>'bg-primary bg-opacity-10 text-primary', 'change'=>$kpis['orders_change']],
-        ['label'=>"Avg Order Value",  'value'=>money($kpis['avg_order_value']),  'icon'=>'bi-graph-up',       'color'=>'bg-warning bg-opacity-10 text-warning', 'change'=>null],
-        ['label'=>"Unique Customers", 'value'=>number_format($kpis['unique_customers']), 'icon'=>'bi-people', 'color'=>'bg-info bg-opacity-10 text-info',    'change'=>null],
+        ['label'=>"Today's Revenue",  'value'=>money($kpis['total_revenue']   ?? 0), 'icon'=>'bi-currency-dollar', 'color'=>'bg-success bg-opacity-10 text-success', 'change'=>$kpis['revenue_change'] ?? 0],
+        ['label'=>"Total Orders",     'value'=>number_format($kpis['total_orders']   ?? 0), 'icon'=>'bi-receipt',  'color'=>'bg-primary bg-opacity-10 text-primary', 'change'=>$kpis['orders_change']  ?? 0],
+        ['label'=>"Avg Order Value",  'value'=>money($kpis['avg_order_value']  ?? 0), 'icon'=>'bi-graph-up',      'color'=>'bg-warning bg-opacity-10 text-warning', 'change'=>null],
+        ['label'=>"Unique Customers", 'value'=>number_format($kpis['unique_customers'] ?? 0), 'icon'=>'bi-people', 'color'=>'bg-info bg-opacity-10 text-info',       'change'=>null],
     ];
     foreach ($kpis_display as $k):
     ?>
@@ -55,7 +55,7 @@ ob_start();
         <div class="card text-center border-0 shadow-sm">
             <div class="card-body py-3">
                 <i class="bi bi-table fs-3 text-primary"></i>
-                <div class="fw-bold fs-5 mt-1"><?= number_format($kpis['dine_in']) ?></div>
+                <div class="fw-bold fs-5 mt-1"><?= number_format($kpis['dine_in']      ?? 0) ?></div>
                 <div class="text-muted small">Dine-In</div>
             </div>
         </div>
@@ -64,7 +64,7 @@ ob_start();
         <div class="card text-center border-0 shadow-sm">
             <div class="card-body py-3">
                 <i class="bi bi-bag fs-3 text-warning"></i>
-                <div class="fw-bold fs-5 mt-1"><?= number_format($kpis['takeout']) ?></div>
+                <div class="fw-bold fs-5 mt-1"><?= number_format($kpis['takeout']     ?? 0) ?></div>
                 <div class="text-muted small">Takeout</div>
             </div>
         </div>
@@ -73,7 +73,7 @@ ob_start();
         <div class="card text-center border-0 shadow-sm">
             <div class="card-body py-3">
                 <i class="bi bi-truck fs-3 text-success"></i>
-                <div class="fw-bold fs-5 mt-1"><?= number_format($kpis['delivery']) ?></div>
+                <div class="fw-bold fs-5 mt-1"><?= number_format($kpis['delivery']    ?? 0) ?></div>
                 <div class="text-muted small">Delivery</div>
             </div>
         </div>
@@ -82,7 +82,7 @@ ob_start();
         <div class="card text-center border-0 shadow-sm">
             <div class="card-body py-3">
                 <i class="bi bi-qr-code fs-3 text-info"></i>
-                <div class="fw-bold fs-5 mt-1"><?= number_format($kpis['self_service']) ?></div>
+                <div class="fw-bold fs-5 mt-1"><?= number_format($kpis['self_service'] ?? 0) ?></div>
                 <div class="text-muted small">QR / Kiosk</div>
             </div>
         </div>

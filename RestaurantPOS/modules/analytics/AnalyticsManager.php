@@ -32,10 +32,20 @@ class AnalyticsManager {
             [$locationId, $prevDate]
         );
 
-        $today['revenue_change'] = $prev['total_revenue'] > 0
+        // Ensure all keys exist with safe defaults
+        $today['total_revenue']    = (float)  ($today['total_revenue']    ?? 0);
+        $today['total_orders']     = (int)    ($today['total_orders']     ?? 0);
+        $today['avg_order_value']  = (float)  ($today['avg_order_value']  ?? 0);
+        $today['unique_customers'] = (int)    ($today['unique_customers'] ?? 0);
+        $today['dine_in']          = (int)    ($today['dine_in']          ?? 0);
+        $today['takeout']          = (int)    ($today['takeout']          ?? 0);
+        $today['delivery']         = (int)    ($today['delivery']         ?? 0);
+        $today['self_service']     = (int)    ($today['self_service']     ?? 0);
+
+        $today['revenue_change'] = ($prev['total_revenue'] ?? 0) > 0
             ? round((($today['total_revenue'] - $prev['total_revenue']) / $prev['total_revenue']) * 100, 1)
             : 0;
-        $today['orders_change']  = $prev['total_orders'] > 0
+        $today['orders_change']  = ($prev['total_orders'] ?? 0) > 0
             ? round((($today['total_orders'] - $prev['total_orders']) / $prev['total_orders']) * 100, 1)
             : 0;
 
