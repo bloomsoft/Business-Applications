@@ -159,6 +159,13 @@ ob_start();
                 <span id="cartTotal">$0.00</span>
             </div>
 
+            <!-- Send to Kitchen -->
+            <div class="d-grid mb-2">
+                <button class="btn btn-warning btn-sm" onclick="sendToKitchen()">
+                    <i class="bi bi-fire me-1"></i>Send to Kitchen
+                </button>
+            </div>
+
             <!-- Payment Buttons -->
             <div class="d-grid gap-2">
                 <button class="btn btn-accent btn-lg" onclick="openPaymentModal('card')">
@@ -411,6 +418,14 @@ function clearOrder() {
     document.getElementById('activeOrderBar').classList.add('d-none');
     document.getElementById('orderItemsList').innerHTML = '<div class="text-center text-muted py-5"><i class="bi bi-cart fs-1"></i><p class="mt-2">Start a new order</p></div>';
     ['cartSubtotal','cartTax','cartTotal'].forEach(id => document.getElementById(id).textContent = '$0.00');
+}
+
+async function sendToKitchen() {
+    if (!POSCart.orderId) { showToast('No active order', 'warning'); return; }
+    try {
+        await api('/api/orders/update-status.php','POST',{order_id:POSCart.orderId,status:'confirmed'});
+        showToast('Order sent to kitchen!','success');
+    } catch(e) { showToast(e.message,'error'); }
 }
 
 async function voidOrder() {

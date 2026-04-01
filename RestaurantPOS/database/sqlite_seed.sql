@@ -168,3 +168,23 @@ INSERT INTO payments (order_id, payment_method, amount, status, processed_by, pr
 (3, 'card', 68.48, 'completed', 2, datetime('now','-3 hours')),
 (4, 'cash', 42.39, 'completed', 2, datetime('now','-4 hours')),
 (5, 'card', 27.15, 'completed', 1, datetime('now','-5 hours'));
+
+-- Live KDS orders (pending/preparing) so Kitchen Display shows tickets on first load
+INSERT INTO orders (tenant_id, location_id, table_id, user_id, order_number, order_type, status, subtotal, tax_amount, total_amount, notes, source, created_at, updated_at)
+VALUES
+(1, 1, 2, 1, 'ORD-006', 'dine-in',  'pending',   32.97, 2.88, 35.85, NULL,              'pos',   datetime('now','-5 minutes'),  datetime('now','-5 minutes')),
+(1, 1, 3, 2, 'ORD-007', 'takeout',  'confirmed',  18.98, 1.66, 20.64, 'Extra napkins',   'pos',   datetime('now','-12 minutes'), datetime('now','-12 minutes')),
+(1, 1, 4, 1, 'ORD-008', 'dine-in',  'preparing',  54.96, 4.81, 59.77, NULL,              'pos',   datetime('now','-22 minutes'), datetime('now','-22 minutes'));
+
+-- Order items for KDS live orders
+INSERT INTO order_items (order_id, item_id, quantity, unit_price, modifier_total, line_total, notes, status) VALUES
+-- ORD-006 (pending, table 2)
+(6, 1, 2, 12.99, 0, 25.98, NULL,             'pending'),
+(6, 7, 1, 6.99,  0, 6.99,  'No ice',         'pending'),
+-- ORD-007 (confirmed, takeout)
+(7, 3, 1, 9.99,  0, 9.99,  NULL,             'preparing'),
+(7, 5, 1, 8.99,  0, 8.99,  'Well done',      'preparing'),
+-- ORD-008 (preparing, table 4 - urgent: 22 mins)
+(8, 2, 2, 16.99, 0, 33.98, NULL,             'preparing'),
+(8, 4, 1, 13.99, 0, 13.99, NULL,             'preparing'),
+(8, 6, 1, 6.99,  0, 6.99,  'Extra sauce',    'preparing');
