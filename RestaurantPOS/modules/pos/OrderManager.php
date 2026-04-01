@@ -282,15 +282,30 @@ class OrderManager {
 
     /** Get open orders for KDS */
     public static function getKDSTickets(int $locationId): array {
-        return Database::fetchAll(
+        $orders = Database::fetchAll(
             "SELECT o.order_id, o.order_number, o.order_type, o.created_at,
                     o.notes, t.table_number,
                     CAST((julianday(datetime('now')) - julianday(o.created_at)) * 1440 AS INTEGER) AS elapsed_minutes
              FROM orders o
              LEFT JOIN restaurant_tables t ON t.table_id = o.table_id
-             WHERE o.location_id = ? AND o.status IN ('confirmed','preparing')
+             WHERE o.location_id = ? AND o.status IN ('pending','confirmed','preparing')
              ORDER BY o.created_at ASC",
             [$locationId]
         );
+
+        foreach ($orders as &$order) {
+            $order['items'] = Database::fetchAll(
+                "SELECT oi.order_item_id, oi.quantity, mi.item_name, oi.notes,
+                        GROUP_CONCAT(m.modifier_name, ', ') AS modifiers
+                 FROM order_items oi
+                 JOIN menu_items mi ON mi.item_id = oi.item_id
+                 LEFT JOIN order_item_modifiers oim ON oim.order_item_id = oi.order_item_id
+                 LEFT JOIN modifiers m ON m.modifier_id = oim.modifier_id
+                 WHERE oi.order_id = ? AND oi.status IN ('pending','preparing')
+                 GROUP BY oi.order_item_id, oi.quantity, mi.item_name, oi.notes",
+                [$order['order_id']]
+            );
+        }
+        return $orders;
     }
 }
