@@ -102,6 +102,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <hr class="my-4">
 
+                    <!-- Demo Credentials -->
+                    <div class="alert alert-info py-2 px-3 small mb-3">
+                        <strong><i class="bi bi-info-circle me-1"></i>Demo Login:</strong><br>
+                        Organization: <code>demo</code><br>
+                        Email: <code>admin@demo.com</code><br>
+                        Password: <code>password123</code>
+                    </div>
+
                     <!-- PIN Login -->
                     <div class="text-center">
                         <a href="/pin-login.php" class="text-muted small">

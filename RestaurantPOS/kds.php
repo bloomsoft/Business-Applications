@@ -33,17 +33,7 @@ ob_start();
     <?php foreach ($tickets as $ticket):
         $mins    = (int)$ticket['elapsed_minutes'];
         $urgency = $mins >= 20 ? 'urgent' : ($mins >= 10 ? 'warning' : '');
-        $items   = Database::fetchAll(
-            "SELECT oi.quantity, mi.item_name, oi.notes,
-                    STRING_AGG(m.modifier_name, ', ') AS modifiers
-             FROM order_items oi
-             JOIN menu_items mi ON mi.item_id = oi.item_id
-             LEFT JOIN order_item_modifiers oim ON oim.order_item_id = oi.order_item_id
-             LEFT JOIN modifiers m ON m.modifier_id = oim.modifier_id
-             WHERE oi.order_id = ? AND oi.status IN ('pending','preparing')
-             GROUP BY oi.order_item_id, oi.quantity, mi.item_name, oi.notes",
-            [$ticket['order_id']]
-        );
+        $items   = $ticket['items'] ?? [];
     ?>
     <div class="col-md-4 col-lg-3" data-order-id="<?= $ticket['order_id'] ?>">
         <div class="kds-ticket card p-0 shadow <?= $urgency ?>">
@@ -103,13 +93,13 @@ ob_start();
 $content = ob_get_clean();
 $scripts = <<<JS
 <script>
-window.LOCATION_ID = <?= (int)$locationId ?>;
+window.LOCATION_ID = {$locationId};
 
 async function bumpOrder(orderId, btn) {
     btn.disabled = true;
     try {
         await api('/api/orders/update-status.php','POST',{order_id:orderId,status:'ready'});
-        document.querySelector(`[data-order-id="${orderId}"]`).remove();
+        document.querySelector(`[data-order-id="\${orderId}"]`).remove();
         checkEmpty();
         showToast('Order marked ready!','success');
     } catch(e) { showToast(e.message,'error'); btn.disabled=false; }
@@ -140,12 +130,68 @@ function toggleFullscreen() {
         : document.documentElement.requestFullscreen();
 }
 
+function urgencyClass(mins) {
+    return mins >= 20 ? 'urgent' : mins >= 10 ? 'warning' : '';
+}
+function headerClass(mins) {
+    return mins >= 20 ? 'bg-danger text-white' : mins >= 10 ? 'bg-warning' : 'bg-light';
+}
+
+function renderKDSTickets(tickets) {
+    const grid = document.getElementById('kdsGrid');
+    if (!tickets.length) {
+        grid.innerHTML = `<div class="col-12 text-center text-muted py-5">
+            <i class="bi bi-check-circle fs-1 text-success"></i>
+            <h4 class="mt-3">All clear — no pending orders</h4></div>`;
+        return;
+    }
+    grid.innerHTML = tickets.map(t => {
+        const mins = t.elapsed_minutes || 0;
+        const urg  = urgencyClass(mins);
+        const items = (t.items||[]).map(i => `
+            <li class="d-flex gap-2 mb-2">
+                <span class="badge bg-dark">\${i.quantity}×</span>
+                <div><strong>\${i.item_name}</strong>
+                    \${i.modifiers ? `<div class="text-muted small">\${i.modifiers}</div>` : ''}
+                    \${i.notes    ? `<div class="text-danger small fst-italic">\${i.notes}</div>` : ''}
+                </div>
+            </li>`).join('');
+        return `
+        <div class="col-md-4 col-lg-3" data-order-id="\${t.order_id}">
+            <div class="kds-ticket card p-0 shadow \${urg}">
+                <div class="card-header d-flex justify-content-between align-items-center \${headerClass(mins)}">
+                    <div>
+                        <h5 class="mb-0">#\${t.order_number}</h5>
+                        <small>\${t.order_type}\${t.table_number?' · Table '+t.table_number:''}</small>
+                    </div>
+                    <div class="text-end">
+                        <div class="kds-timer \${urg}">\${mins}m</div>
+                    </div>
+                </div>
+                <div class="card-body p-3"><ul class="list-unstyled mb-0">\${items}</ul>
+                    \${t.notes?`<div class="alert alert-warning py-1 px-2 mt-2 mb-0 small">\${t.notes}</div>`:''}
+                </div>
+                <div class="card-footer bg-transparent d-flex gap-2">
+                    <button class="btn btn-warning btn-sm flex-grow-1"
+                            onclick="setOrderStatus(\${t.order_id},'preparing',this)">
+                        <i class="bi bi-fire me-1"></i>Preparing</button>
+                    <button class="btn btn-success btn-sm flex-grow-1"
+                            onclick="bumpOrder(\${t.order_id},this)">
+                        <i class="bi bi-check2-all me-1"></i>Ready</button>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
 // Auto-refresh every 30 seconds
 setInterval(async () => {
-    const res = await fetch('/api/kds/tickets.php?location_id=' + window.LOCATION_ID);
-    const tickets = await res.json();
-    renderKDSTickets(tickets);
-    document.getElementById('kdsLastRefresh').textContent = 'Last refresh: ' + new Date().toLocaleTimeString();
+    try {
+        const res     = await fetch('/api/kds/tickets.php?location_id=' + window.LOCATION_ID);
+        const tickets = await res.json();
+        renderKDSTickets(tickets);
+        document.getElementById('kdsLastRefresh').textContent = 'Last refresh: ' + new Date().toLocaleTimeString();
+    } catch(e) { console.error('KDS refresh failed', e); }
 }, 30000);
 </script>
 JS;

@@ -159,6 +159,13 @@ ob_start();
                 <span id="cartTotal">$0.00</span>
             </div>
 
+            <!-- Send to Kitchen -->
+            <div class="d-grid mb-2">
+                <button class="btn btn-warning btn-sm" onclick="sendToKitchen()">
+                    <i class="bi bi-fire me-1"></i>Send to Kitchen
+                </button>
+            </div>
+
             <!-- Payment Buttons -->
             <div class="d-grid gap-2">
                 <button class="btn btn-accent btn-lg" onclick="openPaymentModal('card')">
@@ -252,8 +259,8 @@ ob_start();
 $content = ob_get_clean();
 $scripts = <<<JS
 <script>
-window.LOCATION_ID = <?= (int)$locationId ?>;
-window.TENANT_ID   = <?= (int)$tenantId ?>;
+window.LOCATION_ID = {$locationId};
+window.TENANT_ID   = {$tenantId};
 
 let currentItem       = null;
 let currentItemQty    = 1;
@@ -322,17 +329,17 @@ async function selectItem(itemId, itemName, price) {
 
     body.innerHTML = mods.map(grp => `
         <div class="mb-3">
-            <label class="fw-600">${grp.group_name}
-                ${grp.is_required ? '<span class="badge bg-danger ms-1">Required</span>' : ''}
+            <label class="fw-600">\${grp.group_name}
+                \${grp.is_required ? '<span class="badge bg-danger ms-1">Required</span>' : ''}
             </label>
-            ${grp.options.map(opt => `
+            \${grp.options.map(opt => `
                 <div class="form-check">
-                    <input class="form-check-input modifier-check" type="${grp.selection_type==='single'?'radio':'checkbox'}"
-                           name="grp_${grp.group_id}" value="${opt.modifier_id}"
-                           id="mod_${opt.modifier_id}">
-                    <label class="form-check-label" for="mod_${opt.modifier_id}">
-                        ${opt.modifier_name}
-                        ${opt.price_add > 0 ? '<span class="text-accent">+' + money(opt.price_add) + '</span>' : ''}
+                    <input class="form-check-input modifier-check" type="\${grp.selection_type==='single'?'radio':'checkbox'}"
+                           name="grp_\${grp.group_id}" value="\${opt.modifier_id}"
+                           id="mod_\${opt.modifier_id}">
+                    <label class="form-check-label" for="mod_\${opt.modifier_id}">
+                        \${opt.modifier_name}
+                        \${opt.price_add > 0 ? '<span class="text-accent">+' + money(opt.price_add) + '</span>' : ''}
                     </label>
                 </div>`).join('')}
         </div>`).join('');
@@ -387,9 +394,9 @@ async function searchCustomer(q) {
     const div = document.getElementById('customerResults');
     div.innerHTML = res.map(c => `
         <a href="#" class="list-group-item list-group-item-action py-1"
-           onclick="selectCustomer(${c.customer_id},'${c.first_name} ${c.last_name}');return false">
-            ${c.first_name} ${c.last_name} — ${c.phone||c.email||''}
-            <span class="badge bg-warning text-dark ms-1">${c.loyalty_points} pts</span>
+           onclick="selectCustomer(\${c.customer_id},'\${c.first_name} \${c.last_name}');return false">
+            \${c.first_name} \${c.last_name} — \${c.phone||c.email||''}
+            <span class="badge bg-warning text-dark ms-1">\${c.loyalty_points} pts</span>
         </a>`).join('');
 }
 
@@ -411,6 +418,14 @@ function clearOrder() {
     document.getElementById('activeOrderBar').classList.add('d-none');
     document.getElementById('orderItemsList').innerHTML = '<div class="text-center text-muted py-5"><i class="bi bi-cart fs-1"></i><p class="mt-2">Start a new order</p></div>';
     ['cartSubtotal','cartTax','cartTotal'].forEach(id => document.getElementById(id).textContent = '$0.00');
+}
+
+async function sendToKitchen() {
+    if (!POSCart.orderId) { showToast('No active order', 'warning'); return; }
+    try {
+        await api('/api/orders/update-status.php','POST',{order_id:POSCart.orderId,status:'confirmed'});
+        showToast('Order sent to kitchen!','success');
+    } catch(e) { showToast(e.message,'error'); }
 }
 
 async function voidOrder() {

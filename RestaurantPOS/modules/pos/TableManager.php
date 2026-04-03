@@ -8,7 +8,7 @@ class TableManager {
         return Database::fetchAll(
             "SELECT t.*, a.area_name,
                     o.order_id, o.order_number, o.total_amount,
-                    DATEDIFF(MINUTE, o.created_at, datetime('now')) AS occupied_minutes
+                    CAST((julianday(datetime('now')) - julianday(o.created_at)) * 1440 AS INTEGER) AS occupied_minutes
              FROM restaurant_tables t
              LEFT JOIN dining_areas a ON a.area_id = t.area_id
              LEFT JOIN orders o ON o.table_id = t.table_id

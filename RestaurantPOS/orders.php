@@ -162,7 +162,7 @@ async function viewOrder(orderId) {
     const order = await api('/api/orders/get.php?order_id=' + orderId);
     document.getElementById('orderModalBody').innerHTML = renderOrderDetail(order);
     document.getElementById('orderModalActions').innerHTML =
-        `<button class="btn btn-outline-secondary btn-sm" onclick="printReceipt(${orderId})">
+        `<button class="btn btn-outline-secondary btn-sm" onclick="printReceipt(\${orderId})">
             <i class="bi bi-printer me-1"></i>Print Receipt
         </button>`;
 }
@@ -170,36 +170,36 @@ async function viewOrder(orderId) {
 function renderOrderDetail(order) {
     const items = (order.items||[]).map(i => `
         <tr>
-            <td>${i.item_name}</td>
-            <td>${i.quantity}</td>
-            <td>${money(i.unit_price)}</td>
-            <td>${money(i.line_total)}</td>
+            <td>\${i.item_name}</td>
+            <td>\${i.quantity}</td>
+            <td>\${money(i.unit_price)}</td>
+            <td>\${money(i.line_total)}</td>
         </tr>`).join('');
     return `
         <div class="row mb-3">
             <div class="col-6">
-                <strong>Order #:</strong> ${order.order_number}<br>
-                <strong>Type:</strong> ${order.order_type}<br>
-                <strong>Status:</strong> ${order.status}<br>
-                <strong>Source:</strong> ${order.source}
+                <strong>Order #:</strong> \${order.order_number}<br>
+                <strong>Type:</strong> \${order.order_type}<br>
+                <strong>Status:</strong> \${order.status}<br>
+                <strong>Source:</strong> \${order.source}
             </div>
             <div class="col-6">
-                <strong>Cashier:</strong> ${order.cashier_name||'—'}<br>
-                <strong>Table:</strong> ${order.table_number||'—'}<br>
-                <strong>Customer:</strong> ${order.customer_name||'—'}<br>
-                <strong>Date:</strong> ${order.created_at}
+                <strong>Cashier:</strong> \${order.cashier_name||'—'}<br>
+                <strong>Table:</strong> \${order.table_number||'—'}<br>
+                <strong>Customer:</strong> \${order.customer_name||'—'}<br>
+                <strong>Date:</strong> \${order.created_at}
             </div>
         </div>
         <table class="table table-sm">
             <thead class="table-light"><tr><th>Item</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead>
-            <tbody>${items}</tbody>
+            <tbody>\${items}</tbody>
         </table>
         <div class="text-end">
-            <div>Subtotal: ${money(order.subtotal)}</div>
-            <div>Tax: ${money(order.tax_amount)}</div>
-            ${order.discount_amount>0?`<div class="text-danger">Discount: -${money(order.discount_amount)}</div>`:''}
-            ${order.tip_amount>0?`<div>Tip: ${money(order.tip_amount)}</div>`:''}
-            <div class="fw-bold fs-5">Total: ${money(order.total_amount)}</div>
+            <div>Subtotal: \${money(order.subtotal)}</div>
+            <div>Tax: \${money(order.tax_amount)}</div>
+            \${order.discount_amount>0?`<div class="text-danger">Discount: -\${money(order.discount_amount)}</div>`:''}
+            \${order.tip_amount>0?`<div>Tip: \${money(order.tip_amount)}</div>`:''}
+            <div class="fw-bold fs-5">Total: \${money(order.total_amount)}</div>
         </div>`;
 }
 

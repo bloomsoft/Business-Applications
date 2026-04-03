@@ -208,7 +208,7 @@ $scripts = <<<JS
 <script>
 async function resegment() {
     if (!confirm('Auto-segment all customers based on their activity?')) return;
-    await api('/api/customers/resegment.php','POST',{tenant_id: <?= (int)$tenantId ?>});
+    await api('/api/customers/resegment.php','POST',{tenant_id: {$tenantId}});
     showToast('Customers re-segmented','success');
     setTimeout(()=>location.reload(),1200);
 }

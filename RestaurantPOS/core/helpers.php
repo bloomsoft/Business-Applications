@@ -93,7 +93,7 @@ function paginate(string $sql, array $params, int $page, int $perPage = 20): arr
     $offset = ($page - 1) * $perPage;
     $countSql = preg_replace('/SELECT .+? FROM/is', 'SELECT COUNT(*) FROM', $sql);
     $total = (int) Database::fetchValue($countSql, $params);
-    $rows  = Database::fetchAll("$sql ORDER BY (SELECT NULL) OFFSET $offset ROWS FETCH NEXT $perPage ROWS ONLY", $params);
+    $rows  = Database::fetchAll("$sql LIMIT $perPage OFFSET $offset", $params);
     return [
         'data'        => $rows,
         'total'       => $total,

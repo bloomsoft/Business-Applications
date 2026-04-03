@@ -231,20 +231,20 @@ function kioskSelectItem(item) {
     document.getElementById('kioskItemTotal').textContent = money(item.price);
 
     let html = '';
-    if (item.description) html += `<p class="text-white-50">${item.description}</p>`;
+    if (item.description) html += `<p class="text-white-50">\${item.description}</p>`;
     if (item.modifier_groups?.length) {
         html += item.modifier_groups.map(grp => `
             <div class="mb-3">
-                <div class="fw-600 text-white">${grp.group_name}
-                    ${grp.is_required ? '<span class="badge bg-danger">Required</span>' : ''}
+                <div class="fw-600 text-white">\${grp.group_name}
+                    \${grp.is_required ? '<span class="badge bg-danger">Required</span>' : ''}
                 </div>
-                ${grp.options.map(opt => `
+                \${grp.options.map(opt => `
                     <div class="form-check">
-                        <input class="form-check-input kmod" type="${grp.selection_type==='single'?'radio':'checkbox'}"
-                               name="grp_${grp.group_id}" value="${opt.modifier_id}" data-price="${opt.price_add}">
+                        <input class="form-check-input kmod" type="\${grp.selection_type==='single'?'radio':'checkbox'}"
+                               name="grp_\${grp.group_id}" value="\${opt.modifier_id}" data-price="\${opt.price_add}">
                         <label class="form-check-label text-white">
-                            ${opt.modifier_name}
-                            ${opt.price_add>0?`<span class="text-accent">+${money(opt.price_add)}</span>`:''}
+                            \${opt.modifier_name}
+                            \${opt.price_add>0?`<span class="text-accent">+\${money(opt.price_add)}</span>`:''}
                         </label>
                     </div>`).join('')}
             </div>`).join('');
@@ -290,18 +290,18 @@ function renderKioskCart() {
         kioskCartItems.map(i => `
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
-                    <div class="text-white fw-600">${i.item_name}</div>
+                    <div class="text-white fw-600">\${i.item_name}</div>
                     <div class="d-flex align-items-center gap-2 mt-1">
                         <button class="btn btn-sm btn-outline-secondary py-0"
-                                onclick="kioskQtyChange(${i.item_id}, -1)">−</button>
-                        <span class="text-white-50">×${i.quantity}</span>
+                                onclick="kioskQtyChange(\${i.item_id}, -1)">−</button>
+                        <span class="text-white-50">×\${i.quantity}</span>
                         <button class="btn btn-sm btn-outline-secondary py-0"
-                                onclick="kioskQtyChange(${i.item_id}, 1)">+</button>
+                                onclick="kioskQtyChange(\${i.item_id}, 1)">+</button>
                     </div>
                 </div>
                 <div class="text-end">
-                    <div class="text-white">${money(i.price * i.quantity)}</div>
-                    <button class="btn btn-sm text-danger p-0" onclick="kioskRemove(${i.item_id})">
+                    <div class="text-white">\${money(i.price * i.quantity)}</div>
+                    <button class="btn btn-sm text-danger p-0" onclick="kioskRemove(\${i.item_id})">
                         <i class="bi bi-trash"></i>
                     </button>
                 </div>
@@ -347,9 +347,9 @@ async function kioskCheckout() {
                     <div class="text-center text-white">
                         <i class="bi bi-check-circle-fill text-success" style="font-size:6rem"></i>
                         <h2 class="mt-4">Order Placed!</h2>
-                        <p class="text-white-50 fs-5">Order #${res.order.order_number}</p>
+                        <p class="text-white-50 fs-5">Order #\${res.order.order_number}</p>
                         <p class="text-white-50">We'll have it ready shortly.</p>
-                        <div class="mt-4 fw-bold fs-3">${money(res.order.total_amount)}</div>
+                        <div class="mt-4 fw-bold fs-3">\${money(res.order.total_amount)}</div>
                         <button class="btn btn-accent btn-lg mt-5" onclick="location.reload()">
                             New Order
                         </button>

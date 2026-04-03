@@ -17,11 +17,25 @@ class Database {
                 self::$instance->exec("PRAGMA foreign_keys = ON");
                 self::$instance->exec("PRAGMA journal_mode = WAL");
             } catch (PDOException $e) {
-                error_reporting(E_ALL);
-                ini_set('display_errors', 1);
                 error_log('DB Connection failed: ' . $e->getMessage());
                 http_response_code(503);
-                die(json_encode(['error' => 'Database unavailable: ' . $e->getMessage()]));
+                $msg = htmlspecialchars($e->getMessage());
+                $db  = htmlspecialchars(DB_PATH);
+                die("<!DOCTYPE html><html><head><title>Database Error</title>
+                <style>body{font-family:Arial;max-width:700px;margin:60px auto;padding:20px}
+                .box{background:#fff3cd;border:1px solid #ffc107;border-radius:8px;padding:20px}
+                code{background:#f8f9fa;padding:2px 6px;border-radius:4px;font-size:13px}</style></head>
+                <body><div class='box'>
+                <h2>&#9888; Database Not Ready</h2>
+                <p><strong>Error:</strong> $msg</p>
+                <p><strong>Database file:</strong> <code>$db</code></p>
+                <hr>
+                <h3>Fix: Run setup first</h3>
+                <p>Open <strong>Command Prompt</strong> in the RestaurantPOS folder and run:</p>
+                <p><code>php database\\setup.php</code></p>
+                <p>Then start the server: <code>php -S localhost:8000</code></p>
+                <p>Then open: <a href='http://localhost:8000/login.php'>http://localhost:8000/login.php</a></p>
+                </div></body></html>");
             }
         }
         return self::$instance;

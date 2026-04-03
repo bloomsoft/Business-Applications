@@ -165,7 +165,7 @@
                     <li><h6 class="dropdown-header">Notifications</h6></li>
                     <?php
                     $notifs = Database::fetchAll(
-                        "SELECT TOP 5 * FROM notifications WHERE tenant_id = ? ORDER BY created_at DESC",
+                        "SELECT * FROM notifications WHERE tenant_id = ? ORDER BY created_at DESC LIMIT 5",
                         [Auth::tenantId()]
                     );
                     foreach ($notifs as $n):

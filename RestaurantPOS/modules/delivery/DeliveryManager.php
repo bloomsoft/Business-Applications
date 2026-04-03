@@ -51,9 +51,9 @@ class DeliveryManager {
     /** Update delivery status */
     public static function updateStatus(int $deliveryId, string $status): void {
         $tsCol = match($status) {
-            'picked_up'   => ', picked_up_at = datetime('now')',
-            'delivered'   => ', delivered_at = datetime('now')',
-            default       => '',
+            'picked_up' => ", picked_up_at = datetime('now')",
+            'delivered' => ", delivered_at = datetime('now')",
+            default     => '',
         };
         Database::query(
             "UPDATE delivery_orders SET status = ? $tsCol WHERE delivery_id = ?",
@@ -129,7 +129,7 @@ class DeliveryManager {
             "SELECT d.*, o.order_number, o.total_amount, o.created_at AS order_time,
                     u.first_name || ' ' || u.last_name AS driver_name,
                     u.phone AS driver_phone,
-                    DATEDIFF(MINUTE, o.created_at, datetime('now')) AS elapsed_min
+                    CAST((julianday(datetime('now')) - julianday(o.created_at)) * 1440 AS INTEGER) AS elapsed_min
              FROM delivery_orders d
              JOIN orders o ON o.order_id = d.order_id
              LEFT JOIN users u ON u.user_id = d.driver_id
