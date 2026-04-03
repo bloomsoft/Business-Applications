@@ -255,6 +255,42 @@ ob_start();
     </div>
 </div>
 
+<!-- Delivery Address Modal -->
+<div class="modal fade" id="deliveryModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-truck me-2"></i>Delivery Details</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Delivery Address <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="deliveryStreet" placeholder="Street address">
+                </div>
+                <div class="row g-2 mb-3">
+                    <div class="col-7">
+                        <input type="text" class="form-control" id="deliveryCity" placeholder="City">
+                    </div>
+                    <div class="col-5">
+                        <input type="text" class="form-control" id="deliveryZip" placeholder="ZIP code">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Delivery Notes</label>
+                    <input type="text" class="form-control" id="deliveryNotes" placeholder="Apt #, buzzer code, instructions...">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" onclick="confirmDeliveryOrder()">
+                    <i class="bi bi-check-lg me-1"></i>Start Delivery Order
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <?php
 $content = ob_get_clean();
 $scripts = <<<JS
@@ -292,14 +328,38 @@ function filterMenu(catId) {
 }
 
 async function newOrder() {
-    const tableId   = document.getElementById('tableSelect').value;
     const orderType = document.getElementById('orderTypeSelect').value;
+    if (orderType === 'delivery') {
+        // Clear previous values and show delivery address modal
+        ['deliveryStreet','deliveryCity','deliveryZip','deliveryNotes'].forEach(id => {
+            document.getElementById(id).value = '';
+        });
+        new bootstrap.Modal('#deliveryModal').show();
+        return;
+    }
+    await createOrder(document.getElementById('tableSelect').value, orderType, null);
+}
+
+async function confirmDeliveryOrder() {
+    const street = document.getElementById('deliveryStreet').value.trim();
+    const city   = document.getElementById('deliveryCity').value.trim();
+    const zip    = document.getElementById('deliveryZip').value.trim();
+    const notes  = document.getElementById('deliveryNotes').value.trim();
+    if (!street) { showToast('Please enter a delivery address', 'warning'); return; }
+    const address = [street, city, zip].filter(Boolean).join(', ');
+    const fullNotes = notes ? address + ' | ' + notes : address;
+    bootstrap.Modal.getInstance('#deliveryModal')?.hide();
+    await createOrder(null, 'delivery', fullNotes);
+}
+
+async function createOrder(tableId, orderType, notes) {
     try {
         const res = await api('/api/orders/create.php', 'POST', {
             location_id: window.LOCATION_ID,
             table_id: tableId || null,
             order_type: orderType,
             customer_id: currentCustomerId,
+            notes: notes || null,
         });
         POSCart.orderId = res.order_id;
         document.getElementById('activeOrderBar').classList.remove('d-none');

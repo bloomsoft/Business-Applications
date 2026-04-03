@@ -43,6 +43,7 @@ ob_start();
                     <h5 class="mb-0">#<?= sanitize($ticket['order_number']) ?></h5>
                     <small><?= ucfirst($ticket['order_type']) ?>
                         <?= $ticket['table_number'] ? ' · Table ' . sanitize($ticket['table_number']) : '' ?>
+                        <?= ($ticket['order_type'] === 'delivery' && $ticket['notes']) ? ' · <i class="bi bi-truck"></i>' : '' ?>
                     </small>
                 </div>
                 <div class="text-end">
@@ -80,7 +81,7 @@ ob_start();
                 </button>
                 <button class="btn btn-success btn-sm flex-grow-1"
                         onclick="bumpOrder(<?= $ticket['order_id'] ?>,this)">
-                    <i class="bi bi-check2-all me-1"></i>Ready
+                    <i class="bi bi-check2-all me-1"></i>Done
                 </button>
             </div>
         </div>
@@ -98,7 +99,7 @@ window.LOCATION_ID = {$locationId};
 async function bumpOrder(orderId, btn) {
     btn.disabled = true;
     try {
-        await api('/api/orders/update-status.php','POST',{order_id:orderId,status:'ready'});
+        await api('/api/orders/update-status.php','POST',{order_id:orderId,status:'completed'});
         document.querySelector(`[data-order-id="\${orderId}"]`).remove();
         checkEmpty();
         showToast('Order marked ready!','success');
@@ -177,7 +178,7 @@ function renderKDSTickets(tickets) {
                         <i class="bi bi-fire me-1"></i>Preparing</button>
                     <button class="btn btn-success btn-sm flex-grow-1"
                             onclick="bumpOrder(\${t.order_id},this)">
-                        <i class="bi bi-check2-all me-1"></i>Ready</button>
+                        <i class="bi bi-check2-all me-1"></i>Done</button>
                 </div>
             </div>
         </div>`;

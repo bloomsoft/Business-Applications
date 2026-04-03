@@ -40,12 +40,15 @@ class PaymentManager {
                 ]
             );
 
-            // Update order tip and status
+            // Update order tip — set to 'confirmed' so KDS displays it;
+            // kitchen will bump it to 'completed' when done
+            $newStatus = in_array($order['status'], ['preparing','ready']) ? 'completed' : 'confirmed';
+            $completedAt = $newStatus === 'completed' ? ", completed_at = datetime('now')" : '';
             Database::query(
                 "UPDATE orders SET tip_amount = tip_amount + ?,
                                    total_amount = total_amount + ?,
-                                   status = 'completed',
-                                   completed_at = datetime('now'),
+                                   status = '$newStatus'
+                                   $completedAt,
                                    updated_at   = datetime('now')
                  WHERE order_id = ?",
                 [$tip, $tip, $orderId]
