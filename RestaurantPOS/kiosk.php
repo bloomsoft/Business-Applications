@@ -44,7 +44,7 @@ $menu       = QRKioskManager::getPublicMenu($tenantId);
 <body>
 
 <!-- Idle Screen -->
-<div class="idle-overlay" id="idleOverlay" onclick="wakeUp()">
+<div class="idle-overlay" id="idleOverlay" style="cursor:pointer">
     <div class="text-center">
         <?php if ($tenant['logo_url']): ?>
         <img src="<?= sanitize($tenant['logo_url']) ?>" height="80" class="mb-4" alt="">
@@ -57,7 +57,7 @@ $menu       = QRKioskManager::getPublicMenu($tenantId);
     </div>
 </div>
 
-<div class="d-flex" style="height:100vh; display:none" id="kioskApp">
+<div id="kioskApp" style="height:100vh; display:none; flex-direction:row">
 
     <!-- Menu Panel -->
     <div class="flex-grow-1 d-flex flex-column overflow-hidden">
@@ -180,28 +180,39 @@ $menu       = QRKioskManager::getPublicMenu($tenantId);
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/public/js/app.js"></script>
 <script>
-const LOCATION_ID = <?= (int)$locationId ?>;
-const TENANT_ID   = <?= (int)$tenantId ?>;
-const TAX_RATE    = <?= floatval($location['tax_rate'] ?? 0.08) ?>;
+const KIOSK_LOCATION_ID = <?= (int)$locationId ?>;
+const KIOSK_TENANT_ID   = <?= (int)$tenantId ?>;
+const TAX_RATE          = <?= floatval($location['tax_rate'] ?? 0.08) ?>;
 let kioskItem = null, kioskQty = 1;
-let idleTimer;
+let idleTimer = null;
 
 function wakeUp() {
     document.getElementById('idleOverlay').style.display = 'none';
-    document.getElementById('kioskApp').style.display = 'flex';
+    document.getElementById('kioskApp').style.display   = 'flex';
     resetIdleTimer();
+}
+
+function goIdle() {
+    document.getElementById('kioskApp').style.display   = 'none';
+    document.getElementById('idleOverlay').style.display = 'flex';
+    kioskClearCart();
 }
 
 function resetIdleTimer() {
     clearTimeout(idleTimer);
-    idleTimer = setTimeout(() => {
-        document.getElementById('kioskApp').style.display = 'none';
-        document.getElementById('idleOverlay').style.display = 'flex';
-        kioskClearCart();
-    }, 120000); // 2 min idle
+    idleTimer = setTimeout(goIdle, 120000); // 2 min idle
 }
-document.addEventListener('touchstart', resetIdleTimer);
-document.addEventListener('mousemove', resetIdleTimer);
+
+// Attach wake-up via addEventListener (more reliable than onclick attribute)
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('idleOverlay').addEventListener('click',      wakeUp);
+    document.getElementById('idleOverlay').addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        wakeUp();
+    }, { passive: false });
+});
+document.addEventListener('touchstart', resetIdleTimer, { passive: true });
+document.addEventListener('mousemove',  resetIdleTimer);
 
 // Clock
 setInterval(() => {
@@ -280,11 +291,12 @@ function renderKioskCart() {
     const tax      = total * TAX_RATE;
     const count    = kioskCartItems.reduce((s,i) => s+i.quantity, 0);
 
-    document.getElementById('kioskCartCount').textContent = count;
-    document.getElementById('kioskSubtotal').textContent  = money(total);
-    document.getElementById('kioskTax').textContent       = money(tax);
-    document.getElementById('kioskTotal').textContent     = money(total + tax);
-    document.getElementById('kioskPlaceBtn').disabled     = !kioskCartItems.length;
+    const el = id => document.getElementById(id);
+    if (el('kioskCartCount')) el('kioskCartCount').textContent = count;
+    if (el('kioskSubtotal'))  el('kioskSubtotal').textContent  = money(total);
+    if (el('kioskTax'))       el('kioskTax').textContent       = money(tax);
+    if (el('kioskTotal'))     el('kioskTotal').textContent     = money(total + tax);
+    if (el('kioskPlaceBtn'))  el('kioskPlaceBtn').disabled     = !kioskCartItems.length;
 
     document.getElementById('kioskCart').innerHTML = kioskCartItems.length ?
         kioskCartItems.map(i => `
@@ -334,8 +346,8 @@ async function kioskCheckout() {
     const orderType = document.getElementById('kioskOrderType').value;
     try {
         const res = await api('/api/qr/kiosk-order.php', 'POST', {
-            location_id: LOCATION_ID,
-            tenant_id: TENANT_ID,
+            location_id: KIOSK_LOCATION_ID,
+            tenant_id:   KIOSK_TENANT_ID,
             order_type: orderType,
             cart: kioskCartItems,
         });
