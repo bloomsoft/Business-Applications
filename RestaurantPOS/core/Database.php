@@ -4,6 +4,7 @@
  */
 class Database {
     private static ?PDO $instance = null;
+    private static int  $txDepth  = 0;
 
     public static function getInstance(): PDO {
         if (self::$instance === null) {
@@ -69,18 +70,27 @@ class Database {
         return (int) self::getInstance()->lastInsertId();
     }
 
-    /** Begin transaction */
+    /** Begin transaction (nesting-safe: only starts a real transaction at depth 0) */
     public static function beginTransaction(): void {
-        self::getInstance()->beginTransaction();
+        if (self::$txDepth === 0) {
+            self::getInstance()->beginTransaction();
+        }
+        self::$txDepth++;
     }
 
-    /** Commit transaction */
+    /** Commit transaction (nesting-safe: only commits when outermost scope closes) */
     public static function commit(): void {
-        self::getInstance()->commit();
+        if (self::$txDepth > 0) self::$txDepth--;
+        if (self::$txDepth === 0) {
+            self::getInstance()->commit();
+        }
     }
 
-    /** Rollback transaction */
+    /** Rollback transaction (always rolls back and resets depth) */
     public static function rollback(): void {
-        self::getInstance()->rollBack();
+        self::$txDepth = 0;
+        if (self::getInstance()->inTransaction()) {
+            self::getInstance()->rollBack();
+        }
     }
 }

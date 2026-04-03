@@ -78,7 +78,7 @@ class QRKioskManager {
                 'location_id' => $table['location_id'],
                 'table_id'    => $table['table_id'],
                 'customer_id' => $customerId,
-                'user_id'     => 0,  // system order
+                'user_id'     => null,  // system/self-service order
                 'order_type'  => 'qr-order',
                 'source'      => 'qr',
                 'notes'       => $customerInfo['notes'] ?? null,
@@ -125,7 +125,7 @@ class QRKioskManager {
                 'tenant_id'   => $tenantId,
                 'location_id' => $locationId,
                 'customer_id' => $customerId,
-                'user_id'     => 0,
+                'user_id'     => null,  // self-service kiosk order
                 'order_type'  => $orderType,
                 'source'      => 'kiosk',
             ]);
