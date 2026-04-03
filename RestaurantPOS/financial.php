@@ -52,12 +52,12 @@ ob_start();
 <div class="row g-3 mb-4">
     <?php
     $eodCards = [
-        ['label'=>'Completed Orders', 'value'=>number_format($eod['sales']['completed_orders']),   'cls'=>'text-success'],
-        ['label'=>'Gross Revenue',    'value'=>money($eod['sales']['gross_revenue']),               'cls'=>'text-primary'],
-        ['label'=>'Tax Collected',    'value'=>money($eod['sales']['total_tax']),                   'cls'=>'text-warning'],
-        ['label'=>'Total Tips',       'value'=>money($eod['sales']['total_tips']),                  'cls'=>'text-info'],
-        ['label'=>'Discounts Given',  'value'=>money($eod['sales']['total_discounts']),             'cls'=>'text-danger'],
-        ['label'=>'Cancelled Orders', 'value'=>number_format($eod['sales']['cancelled_orders']),   'cls'=>'text-danger'],
+        ['label'=>'Completed Orders', 'value'=>number_format($eod['sales']['completed_orders'] ?? 0),  'cls'=>'text-success'],
+        ['label'=>'Gross Revenue',    'value'=>money($eod['sales']['gross_revenue']   ?? 0),            'cls'=>'text-primary'],
+        ['label'=>'Tax Collected',    'value'=>money($eod['sales']['total_tax']       ?? 0),            'cls'=>'text-warning'],
+        ['label'=>'Total Tips',       'value'=>money($eod['sales']['total_tips']      ?? 0),            'cls'=>'text-info'],
+        ['label'=>'Discounts Given',  'value'=>money($eod['sales']['total_discounts'] ?? 0),            'cls'=>'text-danger'],
+        ['label'=>'Cancelled Orders', 'value'=>number_format($eod['sales']['cancelled_orders'] ?? 0),  'cls'=>'text-danger'],
     ];
     foreach ($eodCards as $card):
     ?>

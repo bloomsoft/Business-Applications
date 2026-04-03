@@ -112,8 +112,8 @@ class FinancialManager {
                 COALESCE(SUM(tip_amount),0)             AS total_tips,
                 COALESCE(SUM(delivery_fee),0)           AS total_delivery_fees,
                 COALESCE(SUM(total_amount),0)           AS gross_revenue,
-                SUM(CASE WHEN status='cancelled' THEN 1 ELSE 0 END) AS cancelled_orders,
-                SUM(CASE WHEN status='completed' THEN 1 ELSE 0 END) AS completed_orders
+                COALESCE(SUM(CASE WHEN status='cancelled' THEN 1 ELSE 0 END),0) AS cancelled_orders,
+                COALESCE(SUM(CASE WHEN status='completed' THEN 1 ELSE 0 END),0) AS completed_orders
              FROM orders
              WHERE location_id = ? AND date(created_at) = ?",
             [$locationId, $date]
