@@ -86,7 +86,7 @@ ob_start();
                             <td><?= ucfirst(sanitize($p['payment_method'])) ?></td>
                             <td><?= $p['txn_count'] ?></td>
                             <td><?= money($p['total']) ?></td>
-                            <td><?= money($p['total_tips']) ?></td>
+                            <td><?= money($p['total_tips'] ?? 0) ?></td>
                         </tr>
                         <?php endforeach; ?>
                     </tbody>

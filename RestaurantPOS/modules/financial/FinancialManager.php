@@ -121,8 +121,9 @@ class FinancialManager {
 
         $paymentBreakdown = Database::fetchAll(
             "SELECT p.payment_method,
-                    COUNT(*)         AS txn_count,
-                    SUM(p.amount)    AS total
+                    COUNT(*)                      AS txn_count,
+                    COALESCE(SUM(p.amount),0)     AS total,
+                    COALESCE(SUM(p.tip_amount),0) AS total_tips
              FROM payments p
              JOIN orders o ON o.order_id = p.order_id
              WHERE o.location_id = ? AND date(p.processed_at) = ? AND p.status='completed'
