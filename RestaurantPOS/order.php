@@ -199,22 +199,22 @@ function openItem(item) {
     document.getElementById('modalItemTotal').textContent = money(item.price);
 
     let html = '';
-    if (item.description) html += `<p class="text-muted">\${item.description}</p>`;
+    if (item.description) html += `<p class="text-muted">${item.description}</p>`;
     if (item.modifier_groups?.length) {
         html += item.modifier_groups.map(grp => `
             <div class="mb-3">
-                <div class="fw-600">\${grp.group_name}
-                    \${grp.is_required ? '<span class="badge bg-danger">Required</span>' : ''}
+                <div class="fw-600">${grp.group_name}
+                    ${grp.is_required ? '<span class="badge bg-danger">Required</span>' : ''}
                 </div>
-                \${grp.options.map(opt => `
+                ${grp.options.map(opt => `
                     <div class="form-check">
                         <input class="form-check-input mod-opt"
-                               type="\${grp.selection_type==='single'?'radio':'checkbox'}"
-                               name="grp_\${grp.group_id}" value="\${opt.modifier_id}"
-                               data-price="\${opt.price_add}">
+                               type="${grp.selection_type==='single'?'radio':'checkbox'}"
+                               name="grp_${grp.group_id}" value="${opt.modifier_id}"
+                               data-price="${opt.price_add}">
                         <label class="form-check-label">
-                            \${opt.modifier_name}
-                            \${opt.price_add>0?`<span class="text-accent">+\${money(opt.price_add)}</span>`:''}
+                            ${opt.modifier_name}
+                            ${opt.price_add>0?`<span class="text-accent">+${money(opt.price_add)}</span>`:''}
                         </label>
                     </div>`).join('')}
             </div>`).join('');

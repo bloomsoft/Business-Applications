@@ -14,7 +14,7 @@ async function api(url, method = 'GET', data = null) {
     if (data) opts.body = JSON.stringify(data);
     const res  = await fetch(url, opts);
     const json = await res.json();
-    if (!res.ok) throw new Error(json.error || 'Request failed');
+    if (!res.ok) throw new Error(json.error || json.message || 'Request failed');
     return json;
 }
 

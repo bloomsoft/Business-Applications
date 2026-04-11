@@ -13,12 +13,18 @@ if (!$tableToken || empty($cart)) {
     jsonResponse(['success' => false, 'message' => 'Missing required data'], 422);
 }
 
-// Rate limit: max 3 orders per IP per minute
+// Rate limit: max 10 orders per IP per minute (time-based reset)
 $ip       = $_SERVER['REMOTE_ADDR'] ?? '';
 $cacheKey = 'qr_rate_' . md5($ip);
-$count    = (int) ($_SESSION[$cacheKey] ?? 0);
-if ($count >= 3) jsonResponse(['success' => false, 'message' => 'Too many requests'], 429);
+$tsKey    = 'qr_rate_ts_' . md5($ip);
+$now      = time();
+if (isset($_SESSION[$tsKey]) && ($now - $_SESSION[$tsKey]) > 60) {
+    $_SESSION[$cacheKey] = 0; // reset counter after 60 seconds
+}
+$count = (int) ($_SESSION[$cacheKey] ?? 0);
+if ($count >= 10) jsonResponse(['success' => false, 'message' => 'Too many requests, please wait a minute'], 429);
 $_SESSION[$cacheKey] = $count + 1;
+$_SESSION[$tsKey]    = $_SESSION[$tsKey] ?? $now;
 
 $result = QRKioskManager::placeOrder($tableToken, $cart, $customerInfo);
 jsonResponse($result, $result['success'] ? 200 : 422);
