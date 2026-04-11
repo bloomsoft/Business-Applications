@@ -203,14 +203,12 @@ function resetIdleTimer() {
     idleTimer = setTimeout(goIdle, 120000); // 2 min idle
 }
 
-// Attach wake-up via addEventListener (more reliable than onclick attribute)
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('idleOverlay').addEventListener('click',      wakeUp);
-    document.getElementById('idleOverlay').addEventListener('touchstart', function(e) {
-        e.preventDefault();
-        wakeUp();
-    }, { passive: false });
-});
+// Script is at bottom of body — DOM is already ready, attach directly
+document.getElementById('idleOverlay').addEventListener('click', wakeUp);
+document.getElementById('idleOverlay').addEventListener('touchstart', function(e) {
+    e.preventDefault();
+    wakeUp();
+}, { passive: false });
 document.addEventListener('touchstart', resetIdleTimer, { passive: true });
 document.addEventListener('mousemove',  resetIdleTimer);
 
